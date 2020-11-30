@@ -54,27 +54,27 @@ async function setup() {
 }
 
 async function createRoom() {
-  
   // This endpoint is using the proxy as outlined in netlify.toml
   const newRoomEndpoint = `https://chrome-ext-daily-phil.netlify.app/api/rooms`;
-  
+
   // we'll add 30 min expiry (exp) so rooms won't linger too long on your account
   // we'll also turn on chat (enable_chat)
   // see other available options at https://docs.daily.co/reference#create-room
-  const exp = Math.round(Date.now() / 1000 ) + 60*30;
+  const exp = Math.round(Date.now() / 1000) + 60 * 30;
   const options = {
     properties: {
       exp: exp,
-      enable_chat: true
-    }
+      enable_chat: true,
+    },
   };
 
   try {
     let response = await fetch(newRoomEndpoint, {
-      method: 'POST',
-      body: JSON.stringify(options),
-      mode: 'cors'
-    }), room = await response.json();
+        method: 'POST',
+        body: JSON.stringify(options),
+        mode: 'cors',
+      }),
+      room = await response.json();
     return room;
   } catch (e) {
     console.error(e);
