@@ -1,0 +1,133 @@
+<html>
+  <head>
+    <title>Daily Prebuilt UI demo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script src="https://unpkg.com/@daily-co/daily-js"></script>
+    <link rel="icon" type="image/png" href="./assets/favicon.png" />
+    <link rel="stylesheet" href="./index.css" />
+    <script src="./index.js"></script>
+    <!-- <script src="../shared-assets/create-demo-room.js"></script> -->
+  </head>
+  <body onload="setup()" class="main">
+    <div class="container">
+      <header class="header">
+        <img
+          src="assets/logo@2x.png"
+          class="logo"
+          alt="Daily logo reads Daily"
+        />
+        <div>
+          <a href="https://github.com/daily-demos"
+            ><img src="assets/github@icons8.png" alt="GitHub logo Octocat"
+          /></a>
+        </div>
+      </header>
+      <h1 class="title">Daily Prebuilt UI demo</h1>
+      <div class="instructions">
+        <p id="instruction-text">
+          To get started, enter an existing room URL or create a temporary demo
+          room
+        </p>
+        <div class="input-and-buttons">
+          <label for="room-url"></label>
+          <input
+            type="text"
+            class="room-url"
+            id="room-url"
+            placeholder="Room URL"
+            pattern="^(https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.(daily\.co\/)([a-z0-9]+)+$"
+          />
+          <button class="button" id="create-button" onclick="createDemoRoom()">
+            Create demo room
+          </button>
+          <button class="join-call button" onclick="joinCall()">
+            Join call
+          </button>
+        </div>
+        <p class="expires-countdown"></p>
+      </div>
+      <div class="call-container">
+        <div class="callframe" id="callframe"></div>
+        <div class="call-panel hide">
+          <h2 class="call-panel--title">Call overview</h2>
+          <div class="info">
+            <h3 class="call-panel--subtitle">Meeting participants</h3>
+            <ul id="meeting-participants-info"></ul>
+          </div>
+          <div class="info">
+            <h3 class="call-panel--subtitle">Network stats</h3>
+            <p class="loading-network">Loading your network stats...</p>
+            <ul class="network-info"></ul>
+          </div>
+          <div class="info">
+            <h3 class="call-panel--subtitle">Example custom controls</h3>
+            <p>
+              You can also create your own meeting controls outside the
+              callframe using
+              <a href="https://github.com/daily-co/daily-js">daily-js</a>.
+            </p>
+            <h4 class="call-panel--control-type">Participant controls</h4>
+            <button
+              class="call-panel--button button"
+              id="camera-button"
+              onclick="toggleCamera()"
+            >
+              Toggle camera
+            </button>
+            <button
+              class="call-panel--button button"
+              id="mic-button"
+              onclick="toggleMic()"
+            >
+              Toggle mic
+            </button>
+            <button
+              class="call-panel--button button"
+              id="share-button"
+              onclick="toggleScreenshare()"
+            >
+              Share screen
+            </button>
+            <button
+              class="call-panel--button button"
+              id="recording-button"
+              onclick="toggleRecording()"
+            >
+              Start recording
+            </button>
+            <button
+              class="call-panel--button button"
+              id="fullscreen-button"
+              onclick="callFrame.requestFullscreen()"
+            >
+              Expand fullscreen
+            </button>
+            <button
+              class="call-panel--button button"
+              id="surprise-button"
+              onclick="updateBackground()"
+            >
+              Surprise me
+            </button>
+            <h4 class="call-panel--control-type">Track subscriptions</h4>
+            <p>
+              You can
+              <a
+                href="https://www.daily.co/blog/create-dynamic-meetings-using-track-subscriptions/"
+                >programmatically subscribe to the tracks</a
+              >
+              (mic, cam, screenshare) of other participants.
+              <button
+                class="call-panel--button button"
+                id="tracks-button"
+                onClick="unsubscribeTracks()"
+              >
+                Unsubscribe from video and audio
+              </button>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
