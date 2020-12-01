@@ -55,7 +55,7 @@ async function setup() {
 
 async function createRoom() {
   // This endpoint is using the proxy as outlined in netlify.toml
-  const newRoomEndpoint = `https://chrome-ext-daily-phil.netlify.app/api/rooms`;
+  const newRoomEndpoint = `${window.location.origin}/api/rooms`;
 
   // we'll add 30 min expiry (exp) so rooms won't linger too long on your account
   // we'll also turn on chat (enable_chat)

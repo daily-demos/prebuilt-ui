@@ -1,10 +1,9 @@
 # Contributing
 
-Thank you for looking into contributing to`daily-demos`! We want this repo to help people experiment with different Daily projects more quickly. We especially welcome any contributions that help us make existing demos easier to understand, improve demos' instructions and descriptions, and we're especially excited about any new demos that highlight unique ways to use the [Daily API](https://docs.daily.co/reference).
+Thank you for looking into contributing to`daily-demos`! We want these projects to help people experiment with Daily more quickly. We especially welcome any contributions that help us make existing demos easier to understand, improve demos' instructions and descriptions, and we're especially excited about any new demos that highlight unique ways to use the [Daily API](https://docs.daily.co/reference).
 
 **Before contributing:**
 
-- [Run daily-demos locally](#run-daily-demos-locally)
 - [Read our code of conduct](#read-our-code-of-conduct)
 
 **How to contribute:**
@@ -15,54 +14,9 @@ Thank you for looking into contributing to`daily-demos`! We want this repo to he
 
 ## Before contributing
 
-### Run daily-demos locally
+### Run prebuilt-ui locally
 
-Each demo project is an independent standalone project. You can choose to run a single project, or the entire demo project site.
-
-#### Running a single demo project
-
-Using the `static-demos` project as an example:
-
-```bash
-# From daily-demos
-nvm i
-cd static-demos/
-npm i
-
-npm run start
-# or
-npm run dev # automatically restarts server on file changes
-```
-
-Then open your browser and go to `localhost:<port>`, using the port printed in the terminal after running the above.
-
-#### Running the entire demo project site
-
-```bash
-# From daily-demos
-nvm i
-npm i
-
-npm run start
-# or
-npm run dev # automatically restarts server on file changes
-```
-
-Then open your browser and go to `localhost:3000`.
-
-#### Running the React demo Electron runner
-
-The following runs the React demo app from within a simple Electron shell.
-
-```bash
-# From react-demo-electron-runner
-nvm i
-npm i
-
-npm run start # points to demos.daily.co
-# or
-npm run dev # points to localhost:3000 (prerequisite: "Running the entire demo project site")
-```
+Please follow the instructions in `README.md`. 
 
 ### Read our code of conduct
 
@@ -111,53 +65,8 @@ All issues labeled `good-first-issue` are up for grabs. If you'd like to tackle 
 
 ### Contribute a new demo project
 
-If you've built a project on Daily that you want to share with other developers, we'd be more than happy to host a copy in this repository to help spread the word.
+If you've built a project on Daily that you want to share with other developers, we'd be more than happy to help spread the word.
 
 To add a new demo project:
 
-1. Create a new folder for the demo directly under the root directory.
-
-```bash
-# From daily-demos
-mkdir my-new-demo
-```
-
-2. Implement your project as a standalone site. Make sure it runs on a port not used by the other demo projects.
-
-```bash
-cd my-new-demo
-npm init
-# Etc, etc. Make a site.
-```
-
-3. When it's ready, hook your demo project up to the overall demo project site by: a) exposing your demo through the root-level index via proxying, b) making it run as part of the root-level npm scripts (`npm run dev`, `npm run start`, `npm install`, etc.), and c) adding an entry (or multiple entries) to the table of contents in `index.html`.
-
-`index.js`:
-
-```javascript
-app.use(
-  '/my-new-demo',
-  createProxyMiddleware({
-    target: 'http://localhost:1234', // Your demo's port number
-  })
-);
-```
-
-`package.json`:
-
-```json
-"scripts": {
-    "start": "concurrently npm:index-start npm:other-demo-start npm:my-new-demo-start",
-    "dev": "concurrently npm:index-dev npm:other-demo-dev npm:my-new-demo-dev",
-    "postinstall": "npm other-demo-install && npm my-new-demo-install",
-    "my-new-demo-start": "cd my-new-demo && npm run start",
-    "my-new-demo-dev": "cd my-new-demo && npm run dev",
-    "my-new-demo-install": "cd my-new-demo && npm i"
-  },
-```
-
-`index.html`:
-
-```html
-<li><a href="./my-new-demo/">My New Demo</a></li>
-```
+Open a PR in [awesome-daily](#) and add a link to your project. 
