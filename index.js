@@ -125,12 +125,12 @@ function showEvent(e) {
 // Changes instructional text and button to "copy" instead of "create"
 // Hides the join call button
 // Calls functions to update network stats and display demo room
-function showCallDisplay() {
+function showCallDisplay(e) {
   const callPanel = document.getElementsByClassName('call-panel')[0],
     joinButton = document.getElementsByClassName('join-call')[0],
     instructionText = document.getElementById('instruction-text');
 
-  showEvent();
+  showEvent(e);
   setInterval(updateNetworkInfoDisplay, 5000);
 
   callPanel.classList.remove('hide');
@@ -146,7 +146,7 @@ function showCallDisplay() {
 // Changes text back to "create" instead of copy
 // Clears input and button values
 // Restores join call and create demo buttons
-function hideCallDisplay() {
+function hideCallDisplay(e) {
   const expiresCountdown = document.getElementsByClassName(
       'expires-countdown'
     )[0],
@@ -155,7 +155,7 @@ function hideCallDisplay() {
     topButton = document.getElementById('create-button'),
     joinButton = document.getElementsByClassName('join-call')[0];
 
-  showEvent();
+  showEvent(e);
 
   expiresCountdown.classList.toggle('hide');
 
@@ -171,8 +171,11 @@ function hideCallDisplay() {
 }
 
 // Changes the text on the recording button
-function resetRecordingButton() {
+function resetRecordingButton(e) {
   const recordingButton = document.getElementById('recording-button');
+
+  showEvent(e);
+
   recordingButton.setAttribute('onclick', 'callFrame.startRecording()');
   recordingButton.innerHTML = 'Start recording';
 }
