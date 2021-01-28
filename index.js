@@ -210,6 +210,26 @@ function toggleScreenshare() {
   }
 }
 
+function toggleLocalVideo() {
+  const localVideoButton = document.getElementById('local-video-button');
+  const currentlyShown = callFrame.showLocalVideo();
+  callFrame.setShowLocalVideo(!currentlyShown);
+  localVideoButton.innerHTML = `${
+    currentlyShown ? 'Show' : 'Hide'
+  } local video`;
+}
+
+function toggleParticipantsBar() {
+  const participantsBarButton = document.getElementById(
+    'participants-bar-button'
+  );
+  const currentlyShown = callFrame.showParticipantsBar();
+  callFrame.setShowParticipantsBar(!currentlyShown);
+  participantsBarButton.innerHTML = `${
+    currentlyShown ? 'Show' : 'Hide'
+  } participants bar`;
+}
+
 function toggleRecording() {
   const recordingButton = document.getElementById('recording-button');
   callFrame.startRecording();
