@@ -79,6 +79,10 @@ async function createRoom() {
   } catch (e) {
     console.error(e);
   }
+
+  // Comment out the above and uncomment the below, using your own URL
+  // if you prefer to test with a hardcoded room
+  // return {url: "https://your-domain.daily.co/hello"}
 }
 
 // Creates a temporary Daily demo room
