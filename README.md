@@ -34,6 +34,7 @@ Once a room has been created, the participant can click "Join call." This button
 1. Install dependencies `npm i`
 2. Start dev server `npm run dev`
 3. Then open your browser and go to `http://localhost:8080`
+4. Add your own room url in index.js and comment/uncomment the code as noted
 
 OR...
 
