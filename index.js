@@ -1,52 +1,31 @@
 /*
- * Main functions: core call infrastructure, letting setting up the room, event listeners, and joining
+ * Main functions: core call infrastructure, setting up the callframe and event listeners, creating room URL, and joining
  * Event listener callbacks: fired when specified Daily events execute
  * Call panel button functions: participant controls
  */
 
 /* Main functions */
 
-// Creates the callframe
-// Defines event listeners on Daily events
-// Assigns an event listener to the input field to change the join button color
-async function setup() {
-  callFrame = await window.DailyIframe.createFrame(
-    document.getElementById('callframe'),
-    {
-      iframeStyle: {
-        position: 'absolute',
-        top: '0',
-        left: '0',
-        width: '100%',
-        height: '90%',
-        border: '0',
-      },
-    }
-  );
+async function createCallframe() {
+  const callWrapper = document.getElementsByClassName('wrapper')[0];
+  callFrame = await window.DailyIframe.createFrame(callWrapper);
 
   callFrame
     .on('loaded', showEvent)
     .on('started-camera', showEvent)
     .on('camera-error', showEvent)
-    .on('joining-meeting', showEvent)
-    .on('joined-meeting', showCallDisplay)
-    .on('recording-started', showEvent)
-    .on('recording-stopped', resetRecordingButton)
-    .on('recording-stats', showEvent)
-    .on('recording-error', showEvent)
-    .on('app-message', showEvent)
-    .on('input-event', showEvent)
+    .on('joining-meeting', showLobby)
+    .on('joined-meeting', toggleCallPanel)
     .on('error', showEvent)
-    .on('participant-joined', updateParticipantInfoDisplay)
-    .on('participant-updated', updateParticipantInfoDisplay)
-    .on('participant-left', updateParticipantInfoDisplay)
-    .on('left-meeting', hideCallDisplay);
+    .on('left-meeting', toggleCallPanel);
 
-  let roomURL = document.getElementById('room-url');
-  const joinButton = document.getElementsByClassName('join-call')[0];
+  const roomURL = document.getElementById('url-input');
+  const joinButton = document.getElementsByClassName('start-button')[1];
+  const createButton = document.getElementsByClassName('start-button')[0];
   roomURL.addEventListener('input', () => {
     if (roomURL.checkValidity()) {
       joinButton.classList.add('valid');
+      createButton.classList.add('disabled-button');
     } else {
       joinButton.classList.remove('valid');
     }
@@ -85,111 +64,78 @@ async function createRoom() {
   // return {url: "https://your-domain.daily.co/hello"}
 }
 
-// Creates a temporary Daily demo room
-// Assigns the demo room URL to the input value
-// Changes the color of the 'join' button once a room has been created
-async function createDemoRoom() {
-  const createButton = document.getElementById('create-button');
-  const joinButton = document.getElementsByClassName('join-call')[0];
-  const roomURL = document.getElementById('room-url');
-  createButton.innerHTML = 'Creating room...';
-  room = await createRoom();
-  // ownerLink = await createMtgLinkWithToken(room, {
-  //   is_owner: true,
-  //   enable_recording: 'local',
-  // });
+async function createRoomAndStart() {
+  const createAndStartButton = document.getElementsByClassName(
+    'start-button'
+  )[0];
+  const copyUrl = document.getElementById('copy-url');
 
-  roomURL.value = room.url;
-  joinButton.classList.toggle('turn-green');
-  createButton.innerHTML = 'Copy room link';
-  createButton.setAttribute('onclick', 'copyLink()');
+  createAndStartButton.innerHTML = 'Loading...';
 
-  displayDemoRoomTimer();
-}
+  const room = await createRoom();
+  copyUrl.value = room.url;
 
-// Joins Daily call
-// Passes the value in the 'room-url' input to callFrame.join
-async function joinCall() {
-  const roomURL = document.getElementById('room-url');
-  await callFrame.join({
-    url: roomURL.value,
+  showDemoCountdown();
+
+  callFrame.join({
+    url: room.url,
     showLeaveButton: true,
   });
 }
 
-/* Event listener callbacks */
+async function joinCall() {
+  const url = document.getElementById('url-input');
+  const copyUrl = document.getElementById('copy-url');
 
-// Logs the Daily event to the console
+  await callFrame.join({
+    url: url.value,
+    showLeaveButton: true,
+  });
+}
+
+/* Event listener callbacks and helpers */
+
 function showEvent(e) {
   console.log('callFrame event', e);
 }
 
-// 'joined-meeting'
-// Displays the call
-// Changes instructional text and button to "copy" instead of "create"
-// Hides the join call button
-// Calls functions to update network stats and display demo room
-function showCallDisplay(e) {
-  const callPanel = document.getElementsByClassName('call-panel')[0],
-    joinButton = document.getElementsByClassName('join-call')[0],
-    instructionText = document.getElementById('instruction-text');
+function toggleHomeScreen() {
+  const homeScreen = document.getElementsByClassName('start-container')[0];
+  homeScreen.classList.toggle('hide');
+}
 
-  showEvent(e);
+function showLobby() {
+  toggleHomeScreen();
+}
+
+function toggleCallPanel(e) {
+  const callWrapper = document.getElementsByClassName('wrapper')[0];
+  const callControls = document.getElementsByClassName(
+    'call-controls-wrapper'
+  )[0];
+  const createAndStartButton = document.getElementsByClassName(
+    'start-button'
+  )[0];
+
+  createAndStartButton.innerHTML = 'Create room and start';
+  callWrapper.classList.toggle('in-call');
+  callControls.classList.toggle('hide');
   setInterval(updateNetworkInfoDisplay, 5000);
 
-  callPanel.classList.remove('hide');
-  callPanel.classList.add('show');
-
-  instructionText.innerHTML = 'Copy and share the URL to invite others';
-  joinButton.classList.remove('button');
-  joinButton.classList.add('hide');
-}
-
-// 'left-meeting'
-// Hides the call once the participant has exited
-// Changes text back to "create" instead of copy
-// Clears input and button values
-// Restores join call and create demo buttons
-function hideCallDisplay(e) {
-  const expiresCountdown = document.getElementsByClassName(
-      'expires-countdown'
-    )[0],
-    callPanel = document.getElementsByClassName('call-panel')[0],
-    instructionText = document.getElementById('instruction-text'),
-    topButton = document.getElementById('create-button'),
-    joinButton = document.getElementsByClassName('join-call')[0];
-
-  showEvent(e);
-
-  expiresCountdown.classList.toggle('hide');
-
-  callPanel.classList.remove('show');
-  callPanel.classList.add('hide');
-
-  instructionText.innerHTML =
-    'To get started, enter an existing room URL or create a temporary demo room';
-  joinButton.classList.remove('hide');
-  joinButton.classList.add('button');
-  topButton.innerHTML = 'Create demo room';
-  topButton.setAttribute('onclick', 'createDemoRoom()');
-}
-
-// Changes the text on the recording button
-function resetRecordingButton(e) {
-  const recordingButton = document.getElementById('recording-button');
-
-  showEvent(e);
-
-  recordingButton.setAttribute('onclick', 'callFrame.startRecording()');
-  recordingButton.innerHTML = 'Start recording';
+  if (e.action === 'left-meeting') {
+    toggleHomeScreen();
+  }
 }
 
 /* Call panel button functions */
-function copyLink() {
-  const link = document.getElementById('room-url');
-  link.select();
+
+function copyUrl() {
+  const url = document.getElementById('copy-url');
+  const copyButton = document.getElementsByClassName('copy-url-button')[0];
+  url.select();
+  console.log(url);
   document.execCommand('copy');
-  console.log('copied');
+  copyButton.innerHTML = 'Copied!';
 }
 
 function toggleCamera() {
@@ -214,6 +160,10 @@ function toggleScreenshare() {
   }
 }
 
+function toggleFullscreen() {
+  callFrame.requestFullscreen();
+}
+
 function toggleLocalVideo() {
   const localVideoButton = document.getElementById('local-video-button');
   const currentlyShown = callFrame.showLocalVideo();
@@ -234,13 +184,6 @@ function toggleParticipantsBar() {
   } participants bar`;
 }
 
-function toggleRecording() {
-  const recordingButton = document.getElementById('recording-button');
-  callFrame.startRecording();
-  recordingButton.setAttribute('onclick', 'callFrame.stopRecording()');
-  recordingButton.innerHTML = 'Stop recording';
-}
-
 function updateBackground() {
   const backgrounds = [
     'balloons.jpg',
@@ -255,74 +198,64 @@ function updateBackground() {
   }')`;
 }
 
-function unsubscribeTracks() {
-  callFrame.setSubscribeToTracksAutomatically(false);
-  const tracksButton = document.getElementById('tracks-button');
-  tracksButton.setAttribute('onclick', 'subscribeTracks()');
-  tracksButton.innerHTML = 'Subscribe to video and audio';
-}
-
-function subscribeTracks() {
-  callFrame.setSubscribeToTracksAutomatically(true);
-  const tracksButton = document.getElementById('tracks-button');
-  tracksButton.setAttribute('onclick', 'unsubscribeTracks()');
-  tracksButton.innerHTML = 'Unsubscribe from video and audio';
-}
-
 /* Other helper functions */
 
 // Populates 'network info' with information info from daily-js
 async function updateNetworkInfoDisplay() {
-  let networkInfo = document.getElementsByClassName('network-info')[0],
-    statsInfo = await callFrame.getNetworkStats();
-  networkInfo.innerHTML = `
-      <li>
-        Video send:
-        ${Math.floor(statsInfo.stats.latest.videoSendBitsPerSecond / 1000)} kb/s
-      </li>
-      <li>
-        Video recv:
-        ${Math.floor(statsInfo.stats.latest.videoRecvBitsPerSecond / 1000)} kb/s
-      </li>
-      <li>
-        Worst send packet loss:
-        ${Math.floor(statsInfo.stats.worstVideoSendPacketLoss * 100)}%
-      </li>
-      <li>Worst recv packet loss:
-        ${Math.floor(statsInfo.stats.worstVideoRecvPacketLoss * 100)}%
-      </li>
-  `;
-  document.getElementsByClassName('loading-network')[0].classList.add('hide');
+  const videoSend = document.getElementById('video-send'),
+    videoReceive = document.getElementById('video-receive'),
+    packetSend = document.getElementById('packet-send'),
+    packetReceive = document.getElementById('packet-receive');
+
+  let statsInfo = await callFrame.getNetworkStats();
+
+  videoSend.innerHTML = `${Math.floor(
+    statsInfo.stats.latest.videoSendBitsPerSecond / 1000
+  )} kb/s`;
+
+  videoReceive.innerHTML = `${Math.floor(
+    statsInfo.stats.latest.videoRecvBitsPerSecond / 1000
+  )} kb/s`;
+
+  packetSend.innerHTML = `${Math.floor(
+    statsInfo.stats.worstVideoSendPacketLoss * 100
+  )}%`;
+
+  packetReceive.innerHTML = `${Math.floor(
+    statsInfo.stats.worstVideoRecvPacketLoss * 100
+  )}%`;
 }
 
-// Loops through callFrame.participants() to list participants on the call
-function updateParticipantInfoDisplay(e) {
-  showEvent(e);
-  let meetingParticipantsInfo = document.getElementById(
-      'meeting-participants-info'
-    ),
-    participants = callFrame.participants(),
-    participantsList = '';
-  for (var id in participants) {
-    let p = participants[id];
-    participantsList += `
-        <li>${p.user_name || 'Guest'}</li>
-    `;
-  }
-  meetingParticipantsInfo.innerHTML = participantsList;
+function showRoomInput() {
+  const urlClick = document.getElementsByClassName('url-click')[0];
+  const urlForm = document.getElementsByClassName('url-form')[0];
+  urlClick.classList.remove('show');
+  urlClick.classList.add('hide');
+
+  urlForm.classList.remove('hide');
+  urlForm.classList.add('show');
 }
 
-// Displays a countdown timer for the demo room if a demo room has been created
-function displayDemoRoomTimer() {
+function showDemoCountdown() {
+  const countdownDisplay = document.getElementsByClassName('demo-countdown')[0];
+
   if (!window.expiresUpdate) {
     window.expiresUpdate = setInterval(() => {
       let exp = room && room.config && room.config.exp;
       if (exp) {
-        document.getElementsByClassName('expires-countdown')[0].innerHTML = `
-           <em>⏳ Heads up! Your demo room expires in
-             ${Math.floor((new Date(exp * 1000) - Date.now()) / 1000)}
-           seconds ⏳</em>
-         `;
+        let endTime = new Date(exp * 1000).getTime();
+        let now = new Date.getTime();
+
+        let timeLeft = endTime - now;
+
+        if (timeLeft < 0) {
+          clearInterval();
+          countdownDisplay.innerHTML = `Demo room expired!`;
+        }
+        let minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+        let seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+
+        countdownDisplay.innerHTML = `Demo expires in ${minutes}:${seconds}`;
       }
     }, 1000);
   }
