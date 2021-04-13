@@ -72,7 +72,7 @@ async function createRoomAndStart() {
 
   createAndStartButton.innerHTML = 'Loading...';
 
-  const room = await createRoom();
+  room = await createRoom();
   copyUrl.value = room.url;
 
   showDemoCountdown();
