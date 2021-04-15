@@ -243,19 +243,11 @@ function showDemoCountdown() {
     window.expiresUpdate = setInterval(() => {
       let exp = room && room.config && room.config.exp;
       if (exp) {
-        let endTime = new Date(exp * 1000).getTime();
-        let now = new Date.getTime();
+        let seconds = Math.floor((new Date(exp * 1000) - Date.now()) / 1000);
+        let minutes = seconds / 60;
+        let remainingSeconds = minutes % 60;
 
-        let timeLeft = endTime - now;
-
-        if (timeLeft < 0) {
-          clearInterval();
-          countdownDisplay.innerHTML = `Demo room expired!`;
-        }
-        let minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
-        let seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
-
-        countdownDisplay.innerHTML = `Demo expires in ${minutes}:${seconds}`;
+        countdownDisplay.innerHTML = `Demo expires in ${minutes}:${remainingSeconds}`;
       }
     }, 1000);
   }
