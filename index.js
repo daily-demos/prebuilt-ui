@@ -5,6 +5,7 @@
  */
 
 /* Main functions */
+let callFrame, room;
 
 async function createCallframe() {
   const callWrapper = document.getElementsByClassName('wrapper')[0];
@@ -182,20 +183,6 @@ function toggleParticipantsBar() {
   participantsBarButton.innerHTML = `${
     currentlyShown ? 'Show' : 'Hide'
   } participants bar`;
-}
-
-function updateBackground() {
-  const backgrounds = [
-    'balloons.jpg',
-    'confetti.jpg',
-    'dessert.jpg',
-    'fireworks.jpg',
-    '',
-  ];
-
-  document.body.style.backgroundImage = `url('./assets/backgrounds/${
-    backgrounds[Math.ceil(Math.random() * (backgrounds.length - 1))]
-  }')`;
 }
 
 /* Other helper functions */
