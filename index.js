@@ -26,6 +26,7 @@ async function createCallframe() {
   roomURL.addEventListener('input', () => {
     if (roomURL.checkValidity()) {
       joinButton.classList.add('valid');
+      joinButton.classList.remove('disabled-button');
       createButton.classList.add('disabled-button');
     } else {
       joinButton.classList.remove('valid');
@@ -85,11 +86,12 @@ async function createRoomAndStart() {
 }
 
 async function joinCall() {
-  const url = document.getElementById('url-input');
+  const url = document.getElementById('url-input').value;
   const copyUrl = document.getElementById('copy-url');
+  copyUrl.value = url;
 
   await callFrame.join({
-    url: url.value,
+    url: url,
     showLeaveButton: true,
   });
 }
@@ -134,7 +136,6 @@ function copyUrl() {
   const url = document.getElementById('copy-url');
   const copyButton = document.getElementsByClassName('copy-url-button')[0];
   url.select();
-  console.log(url);
   document.execCommand('copy');
   copyButton.innerHTML = 'Copied!';
 }
