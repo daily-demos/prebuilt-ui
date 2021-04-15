@@ -244,10 +244,12 @@ function showDemoCountdown() {
       let exp = room && room.config && room.config.exp;
       if (exp) {
         let seconds = Math.floor((new Date(exp * 1000) - Date.now()) / 1000);
-        let minutes = seconds / 60;
-        let remainingSeconds = minutes % 60;
+        let minutes = Math.floor(seconds / 60);
+        let remainingSeconds = Math.floor(seconds % 60);
 
-        countdownDisplay.innerHTML = `Demo expires in ${minutes}:${remainingSeconds}`;
+        countdownDisplay.innerHTML = `Demo expires in ${minutes}:${
+          remainingSeconds > 10 ? remainingSeconds : '0' + remainingSeconds
+        }`;
       }
     }, 1000);
   }
