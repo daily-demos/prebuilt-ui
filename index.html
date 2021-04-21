@@ -8,41 +8,42 @@
     <script src="./index.js"></script>
   </head>
   <body onload="createCallframe()">
-    <div class="container">
-      <header class="header">
-        <div class="left-header">
-          <img
-            src="assets/logo@2x.png"
-            class="daily-logo"
-            alt="Daily logo reads Daily"
-          />
-          <h4 class="header-title">Prebuilt UI demo</h4>
-        </div>
-        <div class="right-header">
-          <a
-            href="https://docs.daily.co/reference"
-            target="_blank"
-            class="link"
-          >
-            <button class="docs-button white-button">
-              API docs
-              <img
-                src="/assets/new_tab_icon.png"
-                alt="Arrow icon points up and to the right"
-              />
-            </button>
-          </a>
-          <span class="divider"></span>
+    <header class="header">
+      <div class="left-header">
+        <img
+          src="assets/daily_logo.svg"
+          class="daily-logo"
+          alt="Daily logo reads Daily"
+        />
+        <strong>
+          <p class="header-title">Prebuilt UI demo</p>
+        </strong>
+      </div>
+      <div class="right-header">
+        <a href="https://docs.daily.co/reference" target="_blank" class="link">
+          <button class="docs-button white-button">
+            API docs
+            <img
+              class="arrow-icon"
+              src="/assets/new_tab_icon.png"
+              alt="Arrow icon points up and to the right"
+            />
+          </button>
+        </a>
+        <span class="divider"></span>
+        <a href="https://github.com/daily-demos/prebuilt-ui" target="_blank">
           <img
             class="octocat"
-            src="assets/github@icons8.png"
+            src="assets/github_logo.png"
             alt="GitHub logo Octocat"
           />
-        </div>
-      </header>
+        </a>
+      </div>
+    </header>
+    <div class="container">
       <div class="wrapper">
         <div class="start-container">
-          <h1>Prebuilt UI demo</h1>
+          <h1 class="page-title">Prebuilt UI demo</h1>
           <p class="start-prompt">
             Start demo with a new unique room or paste in your own room URL.
           </p>

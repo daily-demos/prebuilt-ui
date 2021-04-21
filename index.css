@@ -9,24 +9,30 @@
   --font-family: GraphikRegular, 'Helvetica Neue', Sans-Serif;
 }
 
+body {
+  margin: 0px;
+}
+
 .container {
   width: 100%;
-  height: 100%;
-  overflow-y: scroll;
-  overflow-x: hidden;
+  height: calc(100% - 56px);
+  top: 56px;
   background-color: var(--grey-lightest);
   position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
   font-family: var(--font-family);
+  font-size: 12px;
+  line-height: 16px;
 }
 
 .header {
   min-width: 100%;
   height: 52px;
   background-color: var(--white);
-  position: absolute;
+  position: fixed;
+  z-index: 1000;
   top: 0;
   box-shadow: inset 0px -1px 0p var(--grey);
   border-bottom: 1px solid var(--grey);
@@ -40,41 +46,54 @@
   justify-content: space-around;
   align-items: center;
   width: 325px;
+  margin-left: 16px;
 }
 
 .daily-logo {
   height: 24px;
   width: 60px;
-  position: fixed;
-  left: 24px;
+  margin-right: 24px;
+}
+
+.header-title {
+  font-size: 12px;
+  line-height: 16px;
+  font-family: var(--font-family);
 }
 
 .right-header {
   display: flex;
   justify-content: space-around;
   align-items: center;
-  width: 200px;
-  position: fixed;
-  right: 4px;
+  margin-right: 24px;
+}
+
+.page-title {
+  margin: 0;
 }
 
 .docs-button {
-  width: 130px;
-  height: 32px;
   padding: 8px 16px;
   justify-content: space-between;
+}
+
+.arrow-icon {
+  width: 16px;
+  height: 16px;
+  margin-left: 4px;
 }
 
 .controls-button {
   justify-content: center;
   padding: 4px 8px;
   height: 30px;
-  margin: 8px;
+  margin: 4px;
 }
 
 .control-icon {
   width: 16px;
   height: 16px;
+  margin-left: 4px;
 }
 
 .white-button {
@@ -94,7 +113,8 @@
 }
 
 .divider {
-  background: var(--dark-blue-border);
+  background: var(--grey);
+  margin: 0 16px;
   display: block;
   height: 32px;
   width: 1px;
@@ -114,8 +134,9 @@
 }
 
 .in-call {
-  width: 80%;
+  width: 50%;
   height: 100%;
+  position: relative;
 }
 
 .call-controls-wrapper {
@@ -125,13 +146,12 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  overflow-y: scroll;
 }
 
 .call-controls {
-  width: 482px;
-  height: 875px;
-  margin-top: 24px;
-  flex: 1;
+  width: 100%;
+  height: 100%;
 }
 
 .controls-header {
@@ -139,7 +159,7 @@
   justify-content: space-between;
   align-items: center;
   flex-shrink: 0;
-  margin-top: 24px;
+  margin: 24px;
   border-bottom: 1px solid var(--grey);
 }
 
@@ -149,6 +169,7 @@
   flex-shrink: 0;
   border-bottom: 1px solid var(--grey);
   padding-bottom: 24px;
+  margin: 0px 24px;
 }
 
 .copy-url-action {
@@ -175,6 +196,12 @@
   flex-shrink: 0;
   border-bottom: 1px solid var(--grey);
   padding-bottom: 24px;
+  margin: 0px 24px;
+}
+
+.controls-custom-example {
+  margin: 24px;
+  padding-bottom: 24px;
 }
 
 .stats-wrapper {
@@ -195,6 +222,7 @@
 .custom-buttons {
   display: flex;
   flex-wrap: wrap;
+  margin-left: -4px;
 }
 
 .start-container {
