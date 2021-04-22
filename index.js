@@ -114,9 +114,13 @@ async function createDemoRoom() {
 // Passes the value in the 'room-url' input to callFrame.join
 async function joinCall() {
   const roomURL = document.getElementById('room-url');
+
+  // To use live streaming, add a meeting token. `is_owner` must be set to true for the token
+  const token = 'MEETING_OWNER_TOKEN';
   await callFrame.join({
     url: roomURL.value,
     showLeaveButton: true,
+    //token, TODO: uncomment when the token has been added above
   });
 }
 
