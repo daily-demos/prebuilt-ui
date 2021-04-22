@@ -37,9 +37,9 @@
             placeholder="Room URL"
             pattern="^(https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.(daily\.co\/)([a-z0-9]+)+$"
           />
-          <button class="button" id="create-button" onclick="createDemoRoom()">
+          <!-- <button class="button" id="create-button" onclick="createDemoRoom()">
             Create demo room
-          </button>
+          </button> -->
           <button class="join-call button" onclick="joinCall()">
             Join call
           </button>
@@ -122,6 +122,20 @@
               onclick="updateBackground()"
             >
               Surprise me
+            </button>
+            <button
+              class="call-panel--button button"
+              id="start-livestreaming"
+              onclick="startLiveStreaming()"
+            >
+              Start live streaming
+            </button>
+            <button
+              class="call-panel--button button"
+              id="stop-livestreaming"
+              onclick="stopLiveStreaming()"
+            >
+              Stop live streaming
             </button>
             <h4 class="call-panel--control-type">Track subscriptions</h4>
             <p>

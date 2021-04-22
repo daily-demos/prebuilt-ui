@@ -40,7 +40,10 @@ async function setup() {
     .on('participant-joined', updateParticipantInfoDisplay)
     .on('participant-updated', updateParticipantInfoDisplay)
     .on('participant-left', updateParticipantInfoDisplay)
-    .on('left-meeting', hideCallDisplay);
+    .on('left-meeting', hideCallDisplay)
+    .on('live-streaming-error', showEvent)
+    .on('live-streaming-started', showEvent)
+    .on('live-streaming-stopped', showEvent);
 
   let roomURL = document.getElementById('room-url');
   const joinButton = document.getElementsByClassName('join-call')[0];
@@ -239,6 +242,19 @@ function toggleRecording() {
   callFrame.startRecording();
   recordingButton.setAttribute('onclick', 'callFrame.stopRecording()');
   recordingButton.innerHTML = 'Stop recording';
+}
+
+// To use live streaming, the room URL should use the format:
+// https://your-daily-domain.daily.co/room-name?t=your-owner-meeting-token
+function startLiveStreaming() {
+  // This should be in the format rtmp://RTMP_ENDPOINT/STREAM_KEY
+  // or rtmps://RTMP_ENDPOINT/STREAM_KEY
+  const rtmpUrl = 'INSERT_RTMP_URL';
+  callFrame.startLiveStreaming({ rtmpUrl });
+}
+
+function stopLiveStreaming() {
+  callFrame.stopLiveStreaming();
 }
 
 function updateBackground() {
