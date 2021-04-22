@@ -63,7 +63,7 @@ async function createRoom() {
 
   // Comment out the above and uncomment the below, using your own URL
   // if you prefer to test with a hardcoded room
-  // return {url: "https://your-domain.daily.co/hello"}
+  //  return {url: "https://your-domain.daily.co/hello"}
 }
 
 async function createRoomAndStart() {
@@ -108,6 +108,8 @@ function toggleHomeScreen() {
 }
 
 function showLobby() {
+  const callWrapper = document.getElementsByClassName('wrapper')[0];
+  callWrapper.classList.toggle('in-lobby');
   toggleHomeScreen();
 }
 
@@ -121,12 +123,14 @@ function toggleCallPanel(e) {
   )[0];
 
   createAndStartButton.innerHTML = 'Create room and start';
+  callWrapper.classList.toggle('in-lobby');
   callWrapper.classList.toggle('in-call');
   callControls.classList.toggle('hide');
   setInterval(updateNetworkInfoDisplay, 5000);
 
   if (e.action === 'left-meeting') {
     toggleHomeScreen();
+    callWrapper.classList.toggle('in-lobby');
   }
 }
 
