@@ -15,7 +15,7 @@ body {
 
 .container {
   width: 100%;
-  height: calc(100% - 56px);
+  height: 100%;
   top: 56px;
   background-color: var(--grey-lightest);
   position: relative;

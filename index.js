@@ -32,6 +32,13 @@ async function createCallframe() {
       joinButton.classList.remove('valid');
     }
   });
+
+  roomURL.addEventListener('keyup', (event) => {
+    if (event.keyCode === 13) {
+      event.preventDefault();
+      joinButton.click();
+    }
+  });
 }
 
 async function createRoom() {
@@ -219,6 +226,7 @@ async function updateNetworkInfoDisplay() {
 }
 
 function showRoomInput() {
+  const urlInput = document.getElementById('url-input');
   const urlClick = document.getElementsByClassName('url-click')[0];
   const urlForm = document.getElementsByClassName('url-form')[0];
   urlClick.classList.remove('show');
@@ -226,6 +234,7 @@ function showRoomInput() {
 
   urlForm.classList.remove('hide');
   urlForm.classList.add('show');
+  urlInput.focus();
 }
 
 function showDemoCountdown() {
