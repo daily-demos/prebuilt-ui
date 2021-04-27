@@ -8,7 +8,7 @@
 let callFrame, room;
 
 async function createCallframe() {
-  const callWrapper = document.getElementsByClassName('wrapper')[0];
+  const callWrapper = document.getElementById('wrapper');
   callFrame = await window.DailyIframe.createFrame(callWrapper);
 
   callFrame
@@ -21,8 +21,8 @@ async function createCallframe() {
     .on('left-meeting', toggleCallPanel);
 
   const roomURL = document.getElementById('url-input');
-  const joinButton = document.getElementsByClassName('start-button')[1];
-  const createButton = document.getElementsByClassName('start-button')[0];
+  const joinButton = document.getElementById('join-call');
+  const createButton = document.getElementById('create-and-start');
   roomURL.addEventListener('input', () => {
     if (roomURL.checkValidity()) {
       joinButton.classList.add('valid');
@@ -74,9 +74,7 @@ async function createRoom() {
 }
 
 async function createRoomAndStart() {
-  const createAndStartButton = document.getElementsByClassName(
-    'start-button'
-  )[0];
+  const createAndStartButton = document.getElementById('create-and-start');
   const copyUrl = document.getElementById('copy-url');
 
   createAndStartButton.innerHTML = 'Loading...';
@@ -110,24 +108,20 @@ function showEvent(e) {
 }
 
 function toggleHomeScreen() {
-  const homeScreen = document.getElementsByClassName('start-container')[0];
+  const homeScreen = document.getElementById('start-container');
   homeScreen.classList.toggle('hide');
 }
 
 function showLobby() {
-  const callWrapper = document.getElementsByClassName('wrapper')[0];
+  const callWrapper = document.getElementById('wrapper');
   callWrapper.classList.toggle('in-lobby');
   toggleHomeScreen();
 }
 
 function toggleCallPanel(e) {
-  const callWrapper = document.getElementsByClassName('wrapper')[0];
-  const callControls = document.getElementsByClassName(
-    'call-controls-wrapper'
-  )[0];
-  const createAndStartButton = document.getElementsByClassName(
-    'start-button'
-  )[0];
+  const callWrapper = document.getElementById('wrapper');
+  const callControls = document.getElementById('call-controls-wrapper');
+  const createAndStartButton = document.getElementById('create-and-start');
 
   createAndStartButton.innerHTML = 'Create room and start';
   callWrapper.classList.toggle('in-lobby');
@@ -145,7 +139,7 @@ function toggleCallPanel(e) {
 
 function copyUrl() {
   const url = document.getElementById('copy-url');
-  const copyButton = document.getElementsByClassName('copy-url-button')[0];
+  const copyButton = document.getElementById('copy-url-button');
   url.select();
   document.execCommand('copy');
   copyButton.innerHTML = 'Copied!';
@@ -227,8 +221,8 @@ async function updateNetworkInfoDisplay() {
 
 function showRoomInput() {
   const urlInput = document.getElementById('url-input');
-  const urlClick = document.getElementsByClassName('url-click')[0];
-  const urlForm = document.getElementsByClassName('url-form')[0];
+  const urlClick = document.getElementById('url-click');
+  const urlForm = document.getElementById('url-form');
   urlClick.classList.remove('show');
   urlClick.classList.add('hide');
 
@@ -238,7 +232,7 @@ function showRoomInput() {
 }
 
 function showDemoCountdown() {
-  const countdownDisplay = document.getElementsByClassName('demo-countdown')[0];
+  const countdownDisplay = document.getElementById('demo-countdown');
 
   if (!window.expiresUpdate) {
     window.expiresUpdate = setInterval(() => {

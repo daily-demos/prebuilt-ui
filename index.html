@@ -41,20 +41,28 @@
       </div>
     </header>
     <div class="container">
-      <div class="wrapper">
-        <div class="start-container">
+      <div id="wrapper" class="wrapper">
+        <div id="start-container" class="start-container">
           <h1 class="page-title">Prebuilt UI demo</h1>
           <p class="start-prompt">
             Start demo with a new unique room or paste in your own room URL.
           </p>
-          <button class="start-button" onclick="createRoomAndStart()">
+          <button
+            id="create-and-start"
+            class="start-button"
+            onclick="createRoomAndStart()"
+          >
             Create room and start
           </button>
           <p class="url-prompt">or</p>
-          <p class="url-prompt url-click show" onclick="showRoomInput()">
+          <p
+            id="url-click"
+            class="url-prompt url-click show"
+            onclick="showRoomInput()"
+          >
             Enter my room URL
           </p>
-          <div class="url-form hide">
+          <div id="url-form" class="url-form hide">
             <label for="url-input"></label>
             <input
               type="text"
@@ -63,17 +71,21 @@
               placeholder="Enter room URL..."
               pattern="^(https:\/\/)?[\w.-]+(\.(daily\.(co)))+[\/\/]+[\w.-]+$"
             />
-            <button onclick="joinCall()" class="start-button disabled-button">
+            <button
+              id="join-call"
+              onclick="joinCall()"
+              class="start-button disabled-button"
+            >
               Start demo
             </button>
           </div>
         </div>
       </div>
-      <div class="call-controls-wrapper hide">
+      <div id="call-controls-wrapper" class="call-controls-wrapper hide">
         <div class="call-controls">
           <div class="controls-header">
             <h3>Call overview</h3>
-            <p class="demo-countdown"></p>
+            <p id="demo-countdown" class="demo-countdown"></p>
           </div>
           <div class="controls-copy-url">
             <div class="copy-url-instructions">
@@ -89,7 +101,11 @@
                 placeholder="Copy this room URL"
                 pattern="^(https:\/\/)?[\w.-]+(\.(daily\.(co)))+[\/\/]+[\w.-]+$"
               />
-              <button class="copy-url-button" onclick="copyUrl()">
+              <button
+                id="copy-url-button"
+                class="copy-url-button"
+                onclick="copyUrl()"
+              >
                 Copy URL
               </button>
             </div>
