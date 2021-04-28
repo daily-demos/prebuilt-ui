@@ -1,144 +1,202 @@
 <html>
   <head>
-    <title>Daily Prebuilt UI demo</title>
+    <title>Daily Prebuilt demo</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <script src="https://unpkg.com/@daily-co/daily-js"></script>
     <link rel="icon" type="image/png" href="./assets/favicon.png" />
     <link rel="stylesheet" href="./index.css" />
     <script src="./index.js"></script>
-    <!-- <script src="../shared-assets/create-demo-room.js"></script> -->
   </head>
-  <body onload="setup()" class="main">
-    <div class="container">
-      <header class="header">
+  <body onload="createCallframe()">
+    <header class="header">
+      <div class="left-header">
         <img
-          src="assets/logo@2x.png"
-          class="logo"
+          src="assets/daily_logo.svg"
+          class="daily-logo"
           alt="Daily logo reads Daily"
         />
-        <div>
-          <a href="https://github.com/daily-demos"
-            ><img src="assets/github@icons8.png" alt="GitHub logo Octocat"
-          /></a>
-        </div>
-      </header>
-      <h1 class="title">Daily Prebuilt UI demo</h1>
-      <div class="instructions">
-        <p id="instruction-text">
-          To get started, enter an existing room URL or create a temporary demo
-          room
-        </p>
-        <div class="input-and-buttons">
-          <label for="room-url"></label>
-          <input
-            type="text"
-            class="room-url"
-            id="room-url"
-            placeholder="Room URL"
-            pattern="^(https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.(daily\.co\/)([a-z0-9]+)+$"
-          />
-          <button class="button" id="create-button" onclick="createDemoRoom()">
-            Create demo room
-          </button>
-          <button class="join-call button" onclick="joinCall()">
-            Join call
-          </button>
-        </div>
-        <p class="expires-countdown"></p>
+        <strong>
+          <p class="header-title">Daily Prebuilt demo</p>
+        </strong>
       </div>
-      <div class="call-container">
-        <div class="callframe" id="callframe"></div>
-        <div class="call-panel hide">
-          <h2 class="call-panel--title">Call overview</h2>
-          <div class="info">
-            <h3 class="call-panel--subtitle">Meeting participants</h3>
-            <ul id="meeting-participants-info"></ul>
+      <div class="right-header">
+        <a href="https://docs.daily.co/reference" target="_blank" class="link">
+          <button class="docs-button white-button">
+            API docs
+            <img
+              class="arrow-icon"
+              src="/assets/new_tab_icon.png"
+              alt="Arrow icon points up and to the right"
+            />
+          </button>
+        </a>
+        <span class="divider"></span>
+        <a href="https://github.com/daily-demos/prebuilt-ui" target="_blank">
+          <img
+            class="octocat"
+            src="assets/github_logo.png"
+            alt="GitHub logo Octocat"
+          />
+        </a>
+      </div>
+    </header>
+    <div class="container">
+      <div id="wrapper" class="wrapper">
+        <div id="start-container" class="start-container">
+          <h1 class="page-title">Daily Prebuilt demo</h1>
+          <p class="start-prompt">
+            Start demo with a new unique room or paste in your own room URL.
+          </p>
+          <button
+            id="create-and-start"
+            class="start-button"
+            onclick="createRoomAndStart()"
+          >
+            Create room and start
+          </button>
+          <p class="url-prompt">or</p>
+          <p
+            id="url-click"
+            class="url-prompt url-click show"
+            onclick="showRoomInput()"
+          >
+            Enter my room URL
+          </p>
+          <div id="url-form" class="url-form hide">
+            <label for="url-input"></label>
+            <input
+              type="text"
+              class="url-input"
+              id="url-input"
+              placeholder="Enter room URL..."
+              pattern="^(https:\/\/)?[\w.-]+(\.(daily\.(co)))+[\/\/]+[\w.-]+$"
+            />
+            <button
+              id="join-call"
+              onclick="joinCall()"
+              class="start-button disabled-button"
+            >
+              Start demo
+            </button>
           </div>
-          <div class="info">
-            <h3 class="call-panel--subtitle">Network stats</h3>
-            <p class="loading-network">Loading your network stats...</p>
-            <ul class="network-info"></ul>
+        </div>
+      </div>
+      <div id="call-controls-wrapper" class="call-controls-wrapper hide">
+        <div class="call-controls">
+          <div class="controls-header">
+            <h3>Call overview</h3>
+            <p id="demo-countdown" class="demo-countdown"></p>
           </div>
-          <div class="info">
-            <h3 class="call-panel--subtitle">Example custom controls</h3>
-            <p>
-              You can also create your own meeting controls outside the
-              callframe using
-              <a href="https://github.com/daily-co/daily-js">daily-js</a>.
-            </p>
-            <h4 class="call-panel--control-type">Participant controls</h4>
-            <button
-              class="call-panel--button button"
-              id="camera-button"
-              onclick="toggleCamera()"
-            >
-              Toggle camera
-            </button>
-            <button
-              class="call-panel--button button"
-              id="mic-button"
-              onclick="toggleMic()"
-            >
-              Toggle mic
-            </button>
-            <button
-              class="call-panel--button button"
-              id="share-button"
-              onclick="toggleScreenshare()"
-            >
-              Share screen
-            </button>
-            <button
-              class="call-panel--button button"
-              id="recording-button"
-              onclick="toggleRecording()"
-            >
-              Start recording
-            </button>
-            <button
-              class="call-panel--button button"
-              id="fullscreen-button"
-              onclick="callFrame.requestFullscreen()"
-            >
-              Expand fullscreen
-            </button>
-            <button
-              class="call-panel--button button"
-              id="local-video-button"
-              onclick="toggleLocalVideo()"
-            >
-              Toggle local video
-            </button>
-            <button
-              class="call-panel--button button"
-              id="participants-bar-button"
-              onclick="toggleParticipantsBar()"
-            >
-              Toggle participants bar
-            </button>
-            <button
-              class="call-panel--button button"
-              id="surprise-button"
-              onclick="updateBackground()"
-            >
-              Surprise me
-            </button>
-            <h4 class="call-panel--control-type">Track subscriptions</h4>
-            <p>
-              You can
-              <a
-                href="https://www.daily.co/blog/create-dynamic-meetings-using-track-subscriptions/"
-                >programmatically subscribe to the tracks</a
-              >
-              (mic, cam, screenshare) of other participants.
+          <div class="controls-copy-url">
+            <div class="copy-url-instructions">
+              <h3>Invite participants</h3>
+              <p>Share URL below to invite others</p>
+            </div>
+            <div class="copy-url-action">
+              <label for="copy-url"></label>
+              <input
+                type="text"
+                class="url-input"
+                id="copy-url"
+                placeholder="Copy this room URL"
+                pattern="^(https:\/\/)?[\w.-]+(\.(daily\.(co)))+[\/\/]+[\w.-]+$"
+              />
               <button
-                class="call-panel--button button"
-                id="tracks-button"
-                onClick="unsubscribeTracks()"
+                id="copy-url-button"
+                class="copy-url-button"
+                onclick="copyUrl()"
               >
-                Unsubscribe from video and audio
+                Copy URL
               </button>
+            </div>
+          </div>
+          <div class="controls-stats">
+            <dl>
+              <h3>Network stats</h3>
+              <div class="stats-wrapper">
+                <div class="stats-column">
+                  <div class="stats-row">
+                    <dt>Video sending</dt>
+                    <dd id="video-send"></dd>
+                  </div>
+                  <div class="stats-row">
+                    <dt>Video receiving</dt>
+                    <dd id="video-receive"></dd>
+                  </div>
+                </div>
+                <div class="stats-column">
+                  <div class="stats-row">
+                    <dt>Packet loss send</dt>
+                    <dd id="packet-send"></dd>
+                  </div>
+                  <div class="stats-row">
+                    <dt>Packet loss receiving</dt>
+                    <dd id="packet-receive"></dd>
+                  </div>
+                </div>
+              </div>
+            </dl>
+          </div>
+          <div class="controls-custom-example">
+            <h3>Example custom controls</h3>
+            <p>
+              You can also create your own meeting controls outside of the
+              callframe using daily-js.
             </p>
+            <div class="custom-buttons">
+              <button
+                onclick="toggleCamera()"
+                class="controls-button white-button"
+              >
+                Toggle camera
+                <img
+                  src="/assets/camera_icon.png"
+                  class="control-icon"
+                  alt="Drawing of a camera"
+                />
+              </button>
+              <button
+                onclick="toggleMic()"
+                class="controls-button white-button"
+              >
+                Toggle mic
+                <img
+                  src="/assets/mic_icon.png"
+                  class="control-icon"
+                  alt="Drawing of a microphone"
+                />
+              </button>
+              <button
+                onclick="toggleScreenshare()"
+                class="controls-button white-button"
+              >
+                Share screen
+                <img
+                  src="/assets/screenshare_icon.png"
+                  class="control-icon"
+                  alt="Drawing of computer screen"
+                />
+              </button>
+              <button
+                onclick="toggleFullscreen()"
+                class="controls-button white-button"
+              >
+                Expand fullscreen
+              </button>
+              <button
+                onclick="toggleLocalVideo()"
+                class="controls-button white-button"
+                id="local-video-button"
+              >
+                Hide local video
+              </button>
+              <button
+                onclick="toggleParticipantsBar()"
+                class="controls-button white-button"
+              >
+                Toggle participant bar (in screen share)
+              </button>
+            </div>
           </div>
         </div>
       </div>
