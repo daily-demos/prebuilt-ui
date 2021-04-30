@@ -158,6 +158,7 @@ body {
 
 .call-controls {
   width: 100%;
+  max-width: 620px;
   height: 100%;
 }
 
@@ -298,6 +299,10 @@ body {
 
 .hide {
   display: none;
+}
+
+.button :active {
+  color: red;
 }
 
 @media screen and (max-width: 700px) {
