@@ -6,6 +6,7 @@
   --dark-blue: #1f2d3d;
   --dark-blue-border: #2b3f56;
   --green: #72cc18;
+  --red-dark: #BB0C0C; 
   --font-family: GraphikRegular, 'Helvetica Neue', Sans-Serif;
 }
 
@@ -303,6 +304,21 @@ body {
 
 .button:active {
   color: black;
+}
+
+.error-message {
+  text-align: center; 
+}
+
+.error-title {
+  color: var(--red-dark); 
+  font-size: 16px; 
+  line-height: 24px; 
+}
+
+.error-description {
+  font-size: 12px; 
+  line-height: 16px; 
 }
 
 @media screen and (max-width: 700px) {

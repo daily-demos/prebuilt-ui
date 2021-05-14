@@ -76,18 +76,31 @@ async function createRoom() {
 async function createRoomAndStart() {
   const createAndStartButton = document.getElementById('create-and-start');
   const copyUrl = document.getElementById('copy-url');
+  const errorTitle = document.getElementById('error-title');
+  const errorDescription = document.getElementById('error-description');
 
   createAndStartButton.innerHTML = 'Loading...';
 
   room = await createRoom();
+  if (room === undefined) {
+    errorTitle.innerHTML = 'Error creating room';
+    errorDescription.innerHTML = 'Please refresh the page and try again.';
+    showError();
+  }
   copyUrl.value = room.url;
 
   showDemoCountdown();
 
-  callFrame.join({
-    url: room.url,
-    showLeaveButton: true,
-  });
+  try {
+    callFrame.join({
+      url: room.url,
+      showLeaveButton: true,
+    });
+  } catch (e) {
+    errorTitle.innerHTML = 'Error joining the call';
+    errorDescription.innerHTML = 'Please refresh the page and try again.';
+    showError();
+  }
 }
 
 async function joinCall() {
@@ -95,10 +108,14 @@ async function joinCall() {
   const copyUrl = document.getElementById('copy-url');
   copyUrl.value = url;
 
-  await callFrame.join({
-    url: url,
-    showLeaveButton: true,
-  });
+  try {
+    await callFrame.join({
+      url: url,
+      showLeaveButton: true,
+    });
+  } catch (e) {
+    showError();
+  }
 }
 
 /* Event listener callbacks and helpers */
@@ -133,6 +150,14 @@ function toggleCallPanel(e) {
     toggleHomeScreen();
     callWrapper.classList.toggle('in-lobby');
   }
+}
+
+function showError() {
+  const startContainer = document.getElementById('start-container');
+  const errorMessage = document.getElementById('error-message');
+
+  startContainer.classList.add('hide');
+  errorMessage.classList.remove('hide');
 }
 
 /* Call panel button functions */
