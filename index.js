@@ -82,9 +82,10 @@ async function createRoomAndStart() {
   createAndStartButton.innerHTML = 'Loading...';
 
   room = await createRoom();
-  if (room === undefined) {
+  if (!room) {
     errorTitle.innerHTML = 'Error creating room';
-    errorDescription.innerHTML = 'Please refresh the page and try again.';
+    errorDescription.innerHTML =
+      "If you're developing locally, please doublecheck the README instructions, refresh the page, and try again.";
     showError();
   }
   copyUrl.value = room.url;
