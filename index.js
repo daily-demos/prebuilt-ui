@@ -115,6 +115,8 @@ async function joinCall() {
       showLeaveButton: true,
     });
   } catch (e) {
+    errorTitle.innerHTML = 'Error joining the call';
+    errorDescription.innerHTML = 'Please refresh the page and try again.';
     showError();
   }
 }
