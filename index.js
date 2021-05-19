@@ -85,7 +85,7 @@ async function createRoomAndStart() {
   if (!room) {
     errorTitle.innerHTML = 'Error creating room';
     errorDescription.innerHTML =
-      "If you're developing locally, please doublecheck the README instructions, refresh the page, and try again.";
+      "If you're developing locally, please doublecheck the README instructions.";
     showError();
   }
   copyUrl.value = room.url;
@@ -120,7 +120,6 @@ async function joinCall() {
 }
 
 /* Event listener callbacks and helpers */
-
 function showEvent(e) {
   console.log('callFrame event', e);
 }
@@ -159,10 +158,10 @@ function showError() {
 
   startContainer.classList.add('hide');
   errorMessage.classList.remove('hide');
+  errorMessage.classList.add('error-message');
 }
 
 /* Call panel button functions */
-
 function copyUrl() {
   const url = document.getElementById('copy-url');
   const copyButton = document.getElementById('copy-url-button');
@@ -218,7 +217,6 @@ function toggleParticipantsBar() {
 }
 
 /* Other helper functions */
-
 // Populates 'network info' with information info from daily-js
 async function updateNetworkInfoDisplay() {
   const videoSend = document.getElementById('video-send'),

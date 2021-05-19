@@ -43,8 +43,8 @@
     <div class="container">
       <div id="wrapper" class="wrapper">
         <div id="start-container" class="start-container">
-          <h1 class="page-title">Daily Prebuilt demo</h1>
-          <p class="start-prompt">
+          <h1 class="title">Daily Prebuilt demo</h1>
+          <p class="prompt">
             Start demo with a new unique room or paste in your own room URL.
           </p>
           <button
@@ -80,11 +80,14 @@
             </button>
           </div>
         </div>
-        <div id="error-message" class="error-message hide">
-          <h2 id="error-title" class="error-title">Incorrect room URL</h2>
+        <div id="error-message" class="hide">
+          <h2 id="error-title" class="title error-title">Incorrect room URL</h2>
           <p id="error-description" class="error-description">
-            Meeting link invalid. Please update the room URL.
+            Meeting link entered is invalid. Please update the room URL.
           </p>
+          <button class="button white-button" onClick="location.reload()">
+            Reload and try again
+          </button>
         </div>
       </div>
       <div id="call-controls-wrapper" class="call-controls-wrapper hide">
