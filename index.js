@@ -15,10 +15,9 @@ async function createCallframe() {
     .on('loaded', showEvent)
     .on('started-camera', showEvent)
     .on('camera-error', showEvent)
-    .on('joining-meeting', showLobby)
-    .on('joined-meeting', toggleCallPanel)
-    .on('error', showEvent)
-    .on('left-meeting', toggleCallPanel);
+    .on('joining-meeting', toggleLobby)
+    .on('joined-meeting', handleJoinedMeeting)
+    .on('left-meeting', handleLeftMeeting);
 
   const roomURL = document.getElementById('url-input');
   const joinButton = document.getElementById('join-call');
@@ -27,6 +26,7 @@ async function createCallframe() {
     if (roomURL.checkValidity()) {
       joinButton.classList.add('valid');
       joinButton.classList.remove('disabled-button');
+      joinButton.removeAttribute('disabled');
       createButton.classList.add('disabled-button');
     } else {
       joinButton.classList.remove('valid');
@@ -76,18 +76,32 @@ async function createRoom() {
 async function createRoomAndStart() {
   const createAndStartButton = document.getElementById('create-and-start');
   const copyUrl = document.getElementById('copy-url');
+  const errorTitle = document.getElementById('error-title');
+  const errorDescription = document.getElementById('error-description');
 
   createAndStartButton.innerHTML = 'Loading...';
 
   room = await createRoom();
+  if (!room) {
+    errorTitle.innerHTML = 'Error creating room';
+    errorDescription.innerHTML =
+      "If you're developing locally, please check the README instructions.";
+    toggleMainInterface();
+    toggleError();
+  }
   copyUrl.value = room.url;
 
   showDemoCountdown();
 
-  callFrame.join({
-    url: room.url,
-    showLeaveButton: true,
-  });
+  try {
+    callFrame.join({
+      url: room.url,
+      showLeaveButton: true,
+    });
+  } catch (e) {
+    toggleError();
+    console.error(e);
+  }
 }
 
 async function joinCall() {
@@ -95,14 +109,24 @@ async function joinCall() {
   const copyUrl = document.getElementById('copy-url');
   copyUrl.value = url;
 
-  await callFrame.join({
-    url: url,
-    showLeaveButton: true,
-  });
+  try {
+    await callFrame.join({
+      url: url,
+      showLeaveButton: true,
+    });
+  } catch (e) {
+    if (
+      e.message === "can't load iframe meeting because url property isn't set"
+    ) {
+      toggleMainInterface();
+      console.log('empty URL');
+    }
+    toggleError();
+    console.error(e);
+  }
 }
 
 /* Event listener callbacks and helpers */
-
 function showEvent(e) {
   console.log('callFrame event', e);
 }
@@ -112,31 +136,62 @@ function toggleHomeScreen() {
   homeScreen.classList.toggle('hide');
 }
 
-function showLobby() {
+function toggleLobby() {
   const callWrapper = document.getElementById('wrapper');
   callWrapper.classList.toggle('in-lobby');
   toggleHomeScreen();
 }
 
-function toggleCallPanel(e) {
-  const callWrapper = document.getElementById('wrapper');
+function toggleControls() {
   const callControls = document.getElementById('call-controls-wrapper');
-  const createAndStartButton = document.getElementById('create-and-start');
-
-  createAndStartButton.innerHTML = 'Create room and start';
-  callWrapper.classList.toggle('in-lobby');
-  callWrapper.classList.toggle('in-call');
   callControls.classList.toggle('hide');
-  setInterval(updateNetworkInfoDisplay, 5000);
+}
 
-  if (e.action === 'left-meeting') {
-    toggleHomeScreen();
-    callWrapper.classList.toggle('in-lobby');
-  }
+function toggleCallStyling() {
+  const callWrapper = document.getElementById('wrapper');
+  const createAndStartButton = document.getElementById('create-and-start');
+  createAndStartButton.innerHTML = 'Create room and start';
+  callWrapper.classList.toggle('in-call');
+}
+
+function toggleError() {
+  const errorMessage = document.getElementById('error-message');
+  errorMessage.classList.toggle('error-message');
+  toggleControls();
+  toggleCallStyling();
+}
+
+function toggleMainInterface() {
+  toggleHomeScreen();
+  toggleControls();
+  toggleCallStyling();
+}
+
+function handleJoinedMeeting() {
+  toggleLobby();
+  toggleMainInterface();
+}
+
+function handleLeftMeeting() {
+  toggleMainInterface();
+}
+
+function resetErrorDesc() {
+  const errorTitle = document.getElementById('error-title');
+  const errorDescription = document.getElementById('error-description');
+
+  errorTitle.innerHTML = 'Incorrect room URL';
+  errorDescription.innerHTML =
+    'Meeting link entered is invalid. Please update the room URL.';
+}
+
+function tryAgain() {
+  toggleError();
+  toggleMainInterface();
+  resetErrorDesc();
 }
 
 /* Call panel button functions */
-
 function copyUrl() {
   const url = document.getElementById('copy-url');
   const copyButton = document.getElementById('copy-url-button');
@@ -192,7 +247,6 @@ function toggleParticipantsBar() {
 }
 
 /* Other helper functions */
-
 // Populates 'network info' with information info from daily-js
 async function updateNetworkInfoDisplay() {
   const videoSend = document.getElementById('video-send'),

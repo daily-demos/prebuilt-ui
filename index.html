@@ -21,7 +21,7 @@
       </div>
       <div class="right-header">
         <a href="https://docs.daily.co/reference" target="_blank" class="link">
-          <button class="docs-button white-button">
+          <button class="button docs-button white-button">
             API docs
             <img
               class="arrow-icon"
@@ -43,13 +43,13 @@
     <div class="container">
       <div id="wrapper" class="wrapper">
         <div id="start-container" class="start-container">
-          <h1 class="page-title">Daily Prebuilt demo</h1>
-          <p class="start-prompt">
+          <h1 class="title">Daily Prebuilt demo</h1>
+          <p class="prompt">
             Start demo with a new unique room or paste in your own room URL.
           </p>
           <button
             id="create-and-start"
-            class="start-button"
+            class="button start-button"
             onclick="createRoomAndStart()"
           >
             Create room and start
@@ -74,11 +74,21 @@
             <button
               id="join-call"
               onclick="joinCall()"
-              class="start-button disabled-button"
+              class="button start-button disabled-button"
+              disabled
             >
-              Start demo
+              Join room
             </button>
           </div>
+        </div>
+        <div id="error-message" class="hide">
+          <h2 id="error-title" class="title error-title">Incorrect room URL</h2>
+          <p id="error-description" class="error-description">
+            Meeting link entered is invalid. Please update the room URL.
+          </p>
+          <button class="button white-button" onClick="tryAgain()">
+            Try Again
+          </button>
         </div>
       </div>
       <div id="call-controls-wrapper" class="call-controls-wrapper hide">
@@ -103,7 +113,7 @@
               />
               <button
                 id="copy-url-button"
-                class="copy-url-button"
+                class="button copy-url-button"
                 onclick="copyUrl()"
               >
                 Copy URL
@@ -146,7 +156,7 @@
             <div class="custom-buttons">
               <button
                 onclick="toggleCamera()"
-                class="controls-button white-button"
+                class="button controls-button white-button"
               >
                 Toggle camera
                 <img
@@ -157,7 +167,7 @@
               </button>
               <button
                 onclick="toggleMic()"
-                class="controls-button white-button"
+                class="button controls-button white-button"
               >
                 Toggle mic
                 <img
@@ -168,7 +178,7 @@
               </button>
               <button
                 onclick="toggleScreenshare()"
-                class="controls-button white-button"
+                class="button controls-button white-button"
               >
                 Share screen
                 <img
@@ -179,22 +189,25 @@
               </button>
               <button
                 onclick="toggleFullscreen()"
-                class="controls-button white-button"
+                class="button controls-button white-button"
               >
                 Expand fullscreen
               </button>
               <button
                 onclick="toggleLocalVideo()"
-                class="controls-button white-button"
+                class="button controls-button white-button"
                 id="local-video-button"
+                title="Hides the local participant's camera stream"
               >
                 Hide local video
               </button>
               <button
+                id="participants-bar-button"
                 onclick="toggleParticipantsBar()"
-                class="controls-button white-button"
+                class="button controls-button white-button"
+                title="Toggles the other participants' videos in Speaker View when three or more people are on the call"
               >
-                Toggle participant bar (in screen share)
+                Toggle other participants (in Speaker View)
               </button>
             </div>
           </div>
