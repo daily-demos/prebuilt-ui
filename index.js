@@ -26,6 +26,7 @@ async function createCallframe() {
     if (roomURL.checkValidity()) {
       joinButton.classList.add('valid');
       joinButton.classList.remove('disabled-button');
+      joinButton.removeAttribute('disabled');
       createButton.classList.add('disabled-button');
     } else {
       joinButton.classList.remove('valid');
