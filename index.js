@@ -7,9 +7,24 @@
 /* Main functions */
 let callFrame, room;
 
+/* ASPECT RATIO STYLING OPTION 2*/
+// const updateSize = () => {
+//   const iframe = document?.getElementsByTagName('iframe')?.[0];
+//   if (!iframe) return;
+
+//   const width = iframe.getBoundingClientRect().width;
+//   const height = width * (16 / 9);
+//   iframe.style.height = height;
+// };
+
+// window.addEventListener('resize', updateSize);
+/* [END] ASPECT RATIO STYLING OPTION 2*/
+
 async function createCallframe() {
   const callWrapper = document.getElementById('wrapper');
-  callFrame = await window.DailyIframe.createFrame(callWrapper);
+  callFrame = await window.DailyIframe.createFrame(callWrapper, {
+    iframeStyle: { height: 'auto', width: '100%' },
+  });
 
   callFrame
     .on('loaded', showEvent)
@@ -114,6 +129,9 @@ async function joinCall() {
       url: url,
       showLeaveButton: true,
     });
+
+    /* ASPECT RATIO STYLING OPTION 2*/
+    // updateSize();
   } catch (e) {
     if (
       e.message === "can't load iframe meeting because url property isn't set"
