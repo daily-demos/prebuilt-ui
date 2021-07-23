@@ -13,7 +13,7 @@ let callFrame, room;
 //   if (!iframe) return;
 
 //   const width = iframe.getBoundingClientRect().width;
-//   const height = width * (16 / 9);
+//   const height = width / (16 / 9);
 //   iframe.style.height = height;
 // };
 
@@ -157,6 +157,10 @@ function toggleHomeScreen() {
 function toggleLobby() {
   const callWrapper = document.getElementById('wrapper');
   callWrapper.classList.toggle('in-lobby');
+
+  /* ASPECT RATIO STYLING OPTION 2*/
+  // updateSize();
+
   toggleHomeScreen();
 }
 

@@ -155,11 +155,16 @@ iframe {
   display: none;
 }
 
+.in-lobby iframe,
 .in-call iframe {
   /* ASPECT RATIO STYLING OPTION 1*/
-  /* aspect-ratio: 16/9; */
+  aspect-ratio: 16/9;
   height: auto;
   display: block;
+}
+
+.in-lobby iframe {
+  max-width: 950px;
 }
 
 .call-controls-wrapper {
@@ -169,6 +174,7 @@ iframe {
   align-items: center;
   justify-content: center;
   overflow-y: scroll;
+  margin-bottom: auto;
 }
 
 .call-controls {
