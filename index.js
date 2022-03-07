@@ -9,7 +9,14 @@ let callFrame, room;
 
 async function createCallframe() {
   const callWrapper = document.getElementById('wrapper');
-  callFrame = await window.DailyIframe.createFrame(callWrapper);
+
+  callFrame = await window.DailyIframe.createFrame(callWrapper, {
+    theme: {
+      colors: {
+        accent: '#ff0000',
+      },
+    },
+  });
 
   callFrame
     .on('loaded', showEvent)
