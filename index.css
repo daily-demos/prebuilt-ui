@@ -36,7 +36,7 @@ body {
   position: fixed;
   z-index: 1000;
   top: 0;
-  box-shadow: inset 0px -1px 0p var(--grey);
+  box-shadow: inset 0px -1px 0px var(--grey);
   border-bottom: 1px solid var(--grey);
   display: flex;
   align-items: center;
