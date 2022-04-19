@@ -2,7 +2,7 @@
 
 This demo highlights [Daily's prebuilt UI](https://www.daily.co/blog/prebuilt-ui/), and how it can be used to embed a video chat widget in a website or app. The demo also illustrates how to use [daily-js methods](https://docs.daily.co/reference#instance-methods) and [events](https://docs.daily.co/reference#events) to build custom interfaces outside of the callframe that control the call.
 
-Check out a live version of the demo [here](https://prebuilt-ui.netlify.app/). 
+Check out a live version of the demo [here](https://prebuilt-ui.netlify.app/).
 
 The demo's custom controls use these Daily methods:
 
@@ -17,7 +17,8 @@ The demo's custom controls use these Daily methods:
 - [`.getNetworkStats()`](https://docs.daily.co/reference#%EF%B8%8F-getnetworkstats)
 - [`.setSubscribeToTracksAutomatically()`](https://docs.daily.co/reference#%EF%B8%8F-setsubscribetotracksautomatically)
 
-![Video call takes up the left side of the screen, call controls on the right](./assets/prebuilt-ui-demo.gif)
+![homescreen](./assets/homescreen.png)
+![call ui](./assets/callui.png)
 
 ## Prerequisites
 
@@ -34,24 +35,32 @@ Once a room has been created, the participant can click "Join call." This button
 1. Install dependencies `npm i`
 2. Start dev server `npm run dev`
 3. Then open your browser and go to `http://localhost:8080`
-4. Add your own room url in index.js and comment/uncomment the code as noted
+
+### To use live streaming:
+
+1. Create a Daily room through the [dashboard](https://dashboard.daily.co) or [REST API](https://docs.daily.co/reference/rest-api/rooms/create-room).
+2. Create a [meeting token](https://docs.daily.co/reference/rest-api/meeting-tokens/create-meeting-token) for your new room with the [`is_owner` property](https://docs.daily.co/reference/rest-api/meeting-tokens/config#is_owner) set to `true`.
+3. From the home screen, click "Enter my room URL" and use the room URL you create in step 1.
+   ![home screen with existing room URL](./assets/livestreaming.png)
+4. Add your token from step 2 in `index.js` where the `.join()` call happens. There's a `todo` comment included to show you where to add it.
+   ![code where token should be added](./assets/token.png)
+5. In `index.js` in the `startLiveStreaming()` function, add your RTMP URL. It should be in the following format: `rtmp://RTMP_ENDPOINT/STREAM_KEY` or `rtmps://RTMP_ENDPOINT/STREAM_KEY`
 
 OR...
 
-## Running using Netlify CLI 
+## Running using Netlify CLI
 
-If you want access to the Daily REST API (using the proxy as specified in `netlify.toml`) as well as a more robust local dev environment, please do the following (in this project's directory): 
+If you want access to the Daily REST API (using the proxy as specified in `netlify.toml`) as well as a more robust local dev environment, please do the following (in this project's directory):
 
 1. Deploy to your Netlify account
-[![Deploy with Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/daily-demos/prebuilt-ui)
+   [![Deploy with Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/daily-demos/prebuilt-ui)
 
 2. Install the Netlify CLI `npm i -g netlify-cli`
 3. Login to your account `netlify login`
 4. Rename `sample.env` to `.env` and add your API key
-4. Start the dev server `netlify dev`
+5. Start the dev server `netlify dev`
 
-> Note: If the API proxy isn't working locally you may need to run `netlify build` first. This will put API key in the `netlify.toml` file, so make sure you don't commit this change. 
-
+> Note: If the API proxy isn't working locally you may need to run `netlify build` first. This will put API key in the `netlify.toml` file, so make sure you don't commit this change.
 
 ## Contributing and feedback
 

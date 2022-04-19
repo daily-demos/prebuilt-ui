@@ -1,57 +1,42 @@
 /*
- * Main functions: core call infrastructure, letting setting up the room, event listeners, and joining
+ * Main functions: core call infrastructure, setting up the callframe and event listeners, creating room URL, and joining
  * Event listener callbacks: fired when specified Daily events execute
  * Call panel button functions: participant controls
  */
 
 /* Main functions */
+let callFrame, room;
 
-// Creates the callframe
-// Defines event listeners on Daily events
-// Assigns an event listener to the input field to change the join button color
-async function setup() {
-  callFrame = await window.DailyIframe.createFrame(
-    document.getElementById('callframe'),
-    {
-      iframeStyle: {
-        position: 'absolute',
-        top: '0',
-        left: '0',
-        width: '100%',
-        height: '90%',
-        border: '0',
-      },
-    }
-  );
+async function createCallframe() {
+  const callWrapper = document.getElementById('wrapper');
+  callFrame = await window.DailyIframe.createFrame(callWrapper);
 
   callFrame
     .on('loaded', showEvent)
     .on('started-camera', showEvent)
     .on('camera-error', showEvent)
-    .on('joining-meeting', showEvent)
-    .on('joined-meeting', showCallDisplay)
-    .on('recording-started', showEvent)
-    .on('recording-stopped', resetRecordingButton)
-    .on('recording-stats', showEvent)
-    .on('recording-error', showEvent)
-    .on('app-message', showEvent)
-    .on('input-event', showEvent)
-    .on('error', showEvent)
-    .on('participant-joined', updateParticipantInfoDisplay)
-    .on('participant-updated', updateParticipantInfoDisplay)
-    .on('participant-left', updateParticipantInfoDisplay)
-    .on('left-meeting', hideCallDisplay)
-    .on('live-streaming-error', showEvent)
-    .on('live-streaming-started', showEvent)
-    .on('live-streaming-stopped', showEvent);
+    .on('joining-meeting', toggleLobby)
+    .on('joined-meeting', handleJoinedMeeting)
+    .on('left-meeting', handleLeftMeeting);
 
-  let roomURL = document.getElementById('room-url');
-  const joinButton = document.getElementsByClassName('join-call')[0];
+  const roomURL = document.getElementById('url-input');
+  const joinButton = document.getElementById('join-call');
+  const createButton = document.getElementById('create-and-start');
   roomURL.addEventListener('input', () => {
     if (roomURL.checkValidity()) {
       joinButton.classList.add('valid');
+      joinButton.classList.remove('disabled-button');
+      joinButton.removeAttribute('disabled');
+      createButton.classList.add('disabled-button');
     } else {
       joinButton.classList.remove('valid');
+    }
+  });
+
+  roomURL.addEventListener('keyup', (event) => {
+    if (event.keyCode === 13) {
+      event.preventDefault();
+      joinButton.click();
     }
   });
 }
@@ -85,118 +70,136 @@ async function createRoom() {
 
   // Comment out the above and uncomment the below, using your own URL
   // if you prefer to test with a hardcoded room
-  // return {url: "https://your-domain.daily.co/hello"}
+  //  return {url: "https://your-domain.daily.co/hello"}
 }
 
-// Creates a temporary Daily demo room
-// Assigns the demo room URL to the input value
-// Changes the color of the 'join' button once a room has been created
-async function createDemoRoom() {
-  const createButton = document.getElementById('create-button');
-  const joinButton = document.getElementsByClassName('join-call')[0];
-  const roomURL = document.getElementById('room-url');
-  createButton.innerHTML = 'Creating room...';
+async function createRoomAndStart() {
+  const createAndStartButton = document.getElementById('create-and-start');
+  const copyUrl = document.getElementById('copy-url');
+  const errorTitle = document.getElementById('error-title');
+  const errorDescription = document.getElementById('error-description');
+
+  createAndStartButton.innerHTML = 'Loading...';
+
   room = await createRoom();
-  // ownerLink = await createMtgLinkWithToken(room, {
-  //   is_owner: true,
-  //   enable_recording: 'local',
-  // });
+  if (!room) {
+    errorTitle.innerHTML = 'Error creating room';
+    errorDescription.innerHTML =
+      "If you're developing locally, please check the README instructions.";
+    toggleMainInterface();
+    toggleError();
+  }
+  copyUrl.value = room.url;
 
-  roomURL.value = room.url;
-  joinButton.classList.toggle('turn-green');
-  createButton.innerHTML = 'Copy room link';
-  createButton.setAttribute('onclick', 'copyLink()');
+  showDemoCountdown();
 
-  displayDemoRoomTimer();
+  try {
+    callFrame.join({
+      url: room.url,
+      showLeaveButton: true,
+    });
+  } catch (e) {
+    toggleError();
+    console.error(e);
+  }
 }
 
-// Joins Daily call
-// Passes the value in the 'room-url' input to callFrame.join
 async function joinCall() {
-  const roomURL = document.getElementById('room-url');
+  const url = document.getElementById('url-input').value;
+  const copyUrl = document.getElementById('copy-url');
+  copyUrl.value = url;
 
-  // To use live streaming, add a meeting token. `is_owner` must be set to true for the token
-  const token = 'MEETING_OWNER_TOKEN';
-  await callFrame.join({
-    url: roomURL.value,
-    showLeaveButton: true,
-    //token, TODO: uncomment when the token has been added above
-  });
+  try {
+    await callFrame.join({
+      url: url,
+      showLeaveButton: true,
+      //TODO: add an owner token to use live streaming
+      // token: <token>,
+    });
+  } catch (e) {
+    if (
+      e.message === "can't load iframe meeting because url property isn't set"
+    ) {
+      toggleMainInterface();
+      console.log('empty URL');
+    }
+    toggleError();
+    console.error(e);
+  }
 }
 
-/* Event listener callbacks */
-
-// Logs the Daily event to the console
+/* Event listener callbacks and helpers */
 function showEvent(e) {
   console.log('callFrame event', e);
 }
 
-// 'joined-meeting'
-// Displays the call
-// Changes instructional text and button to "copy" instead of "create"
-// Hides the join call button
-// Calls functions to update network stats and display demo room
-function showCallDisplay(e) {
-  const callPanel = document.getElementsByClassName('call-panel')[0],
-    joinButton = document.getElementsByClassName('join-call')[0],
-    instructionText = document.getElementById('instruction-text');
-
-  showEvent(e);
-  setInterval(updateNetworkInfoDisplay, 5000);
-
-  callPanel.classList.remove('hide');
-  callPanel.classList.add('show');
-
-  instructionText.innerHTML = 'Copy and share the URL to invite others';
-  joinButton.classList.remove('button');
-  joinButton.classList.add('hide');
+function toggleHomeScreen() {
+  const homeScreen = document.getElementById('start-container');
+  homeScreen.classList.toggle('hide');
 }
 
-// 'left-meeting'
-// Hides the call once the participant has exited
-// Changes text back to "create" instead of copy
-// Clears input and button values
-// Restores join call and create demo buttons
-function hideCallDisplay(e) {
-  const expiresCountdown = document.getElementsByClassName(
-      'expires-countdown'
-    )[0],
-    callPanel = document.getElementsByClassName('call-panel')[0],
-    instructionText = document.getElementById('instruction-text'),
-    topButton = document.getElementById('create-button'),
-    joinButton = document.getElementsByClassName('join-call')[0];
-
-  showEvent(e);
-
-  expiresCountdown.classList.toggle('hide');
-
-  callPanel.classList.remove('show');
-  callPanel.classList.add('hide');
-
-  instructionText.innerHTML =
-    'To get started, enter an existing room URL or create a temporary demo room';
-  joinButton.classList.remove('hide');
-  joinButton.classList.add('button');
-  topButton.innerHTML = 'Create demo room';
-  topButton.setAttribute('onclick', 'createDemoRoom()');
+function toggleLobby() {
+  const callWrapper = document.getElementById('wrapper');
+  callWrapper.classList.toggle('in-lobby');
+  toggleHomeScreen();
 }
 
-// Changes the text on the recording button
-function resetRecordingButton(e) {
-  const recordingButton = document.getElementById('recording-button');
+function toggleControls() {
+  const callControls = document.getElementById('call-controls-wrapper');
+  callControls.classList.toggle('hide');
+}
 
-  showEvent(e);
+function toggleCallStyling() {
+  const callWrapper = document.getElementById('wrapper');
+  const createAndStartButton = document.getElementById('create-and-start');
+  createAndStartButton.innerHTML = 'Create room and start';
+  callWrapper.classList.toggle('in-call');
+}
 
-  recordingButton.setAttribute('onclick', 'callFrame.startRecording()');
-  recordingButton.innerHTML = 'Start recording';
+function toggleError() {
+  const errorMessage = document.getElementById('error-message');
+  errorMessage.classList.toggle('error-message');
+  toggleControls();
+  toggleCallStyling();
+}
+
+function toggleMainInterface() {
+  toggleHomeScreen();
+  toggleControls();
+  toggleCallStyling();
+}
+
+function handleJoinedMeeting() {
+  toggleLobby();
+  toggleMainInterface();
+}
+
+function handleLeftMeeting() {
+  toggleMainInterface();
+}
+
+function resetErrorDesc() {
+  const errorTitle = document.getElementById('error-title');
+  const errorDescription = document.getElementById('error-description');
+
+  errorTitle.innerHTML = 'Incorrect room URL';
+  errorDescription.innerHTML =
+    'Meeting link entered is invalid. Please update the room URL.';
+}
+
+function tryAgain() {
+  toggleError();
+  toggleMainInterface();
+  resetErrorDesc();
 }
 
 /* Call panel button functions */
-function copyLink() {
-  const link = document.getElementById('room-url');
-  link.select();
+function copyUrl() {
+  const url = document.getElementById('copy-url');
+  const copyButton = document.getElementById('copy-url-button');
+  url.select();
   document.execCommand('copy');
-  console.log('copied');
+  copyButton.innerHTML = 'Copied!';
 }
 
 function toggleCamera() {
@@ -221,6 +224,28 @@ function toggleScreenshare() {
   }
 }
 
+function toggleFullscreen() {
+  callFrame.requestFullscreen();
+}
+
+// To use live streaming, the room URL should use the format:
+// https://your-daily-domain.daily.co/room-name?t=your-owner-meeting-token
+function startLiveStreaming() {
+  // This should be in the format rtmp://RTMP_ENDPOINT/STREAM_KEY
+  // or rtmps://RTMP_ENDPOINT/STREAM_KEY
+  const rtmpUrl =
+    'rtmps://e847623d72e7.global-contribute.live-video.net:443/app/sk_us-east-1_GyFwibpjy7jt_CeTb5L6E9Athwd6h1rw9zmH5Xxa33E';
+  callFrame.startLiveStreaming({
+    rtmpUrl,
+    layout: {
+      preset: 'custom',
+    },
+  });
+}
+
+function stopLiveStreaming() {
+  callFrame.stopLiveStreaming();
+}
 function toggleLocalVideo() {
   const localVideoButton = document.getElementById('local-video-button');
   const currentlyShown = callFrame.showLocalVideo();
@@ -241,108 +266,59 @@ function toggleParticipantsBar() {
   } participants bar`;
 }
 
-function toggleRecording() {
-  const recordingButton = document.getElementById('recording-button');
-  callFrame.startRecording();
-  recordingButton.setAttribute('onclick', 'callFrame.stopRecording()');
-  recordingButton.innerHTML = 'Stop recording';
-}
-
-// To use live streaming, the room URL should use the format:
-// https://your-daily-domain.daily.co/room-name?t=your-owner-meeting-token
-function startLiveStreaming() {
-  // This should be in the format rtmp://RTMP_ENDPOINT/STREAM_KEY
-  // or rtmps://RTMP_ENDPOINT/STREAM_KEY
-  const rtmpUrl = 'INSERT_RTMP_URL';
-  callFrame.startLiveStreaming({ rtmpUrl });
-}
-
-function stopLiveStreaming() {
-  callFrame.stopLiveStreaming();
-}
-
-function updateBackground() {
-  const backgrounds = [
-    'balloons.jpg',
-    'confetti.jpg',
-    'dessert.jpg',
-    'fireworks.jpg',
-    '',
-  ];
-
-  document.body.style.backgroundImage = `url('./assets/backgrounds/${
-    backgrounds[Math.ceil(Math.random() * (backgrounds.length - 1))]
-  }')`;
-}
-
-function unsubscribeTracks() {
-  callFrame.setSubscribeToTracksAutomatically(false);
-  const tracksButton = document.getElementById('tracks-button');
-  tracksButton.setAttribute('onclick', 'subscribeTracks()');
-  tracksButton.innerHTML = 'Subscribe to video and audio';
-}
-
-function subscribeTracks() {
-  callFrame.setSubscribeToTracksAutomatically(true);
-  const tracksButton = document.getElementById('tracks-button');
-  tracksButton.setAttribute('onclick', 'unsubscribeTracks()');
-  tracksButton.innerHTML = 'Unsubscribe from video and audio';
-}
-
 /* Other helper functions */
-
 // Populates 'network info' with information info from daily-js
 async function updateNetworkInfoDisplay() {
-  let networkInfo = document.getElementsByClassName('network-info')[0],
-    statsInfo = await callFrame.getNetworkStats();
-  networkInfo.innerHTML = `
-      <li>
-        Video send:
-        ${Math.floor(statsInfo.stats.latest.videoSendBitsPerSecond / 1000)} kb/s
-      </li>
-      <li>
-        Video recv:
-        ${Math.floor(statsInfo.stats.latest.videoRecvBitsPerSecond / 1000)} kb/s
-      </li>
-      <li>
-        Worst send packet loss:
-        ${Math.floor(statsInfo.stats.worstVideoSendPacketLoss * 100)}%
-      </li>
-      <li>Worst recv packet loss:
-        ${Math.floor(statsInfo.stats.worstVideoRecvPacketLoss * 100)}%
-      </li>
-  `;
-  document.getElementsByClassName('loading-network')[0].classList.add('hide');
+  const videoSend = document.getElementById('video-send'),
+    videoReceive = document.getElementById('video-receive'),
+    packetSend = document.getElementById('packet-send'),
+    packetReceive = document.getElementById('packet-receive');
+
+  let statsInfo = await callFrame.getNetworkStats();
+
+  videoSend.innerHTML = `${Math.floor(
+    statsInfo.stats.latest.videoSendBitsPerSecond / 1000
+  )} kb/s`;
+
+  videoReceive.innerHTML = `${Math.floor(
+    statsInfo.stats.latest.videoRecvBitsPerSecond / 1000
+  )} kb/s`;
+
+  packetSend.innerHTML = `${Math.floor(
+    statsInfo.stats.worstVideoSendPacketLoss * 100
+  )}%`;
+
+  packetReceive.innerHTML = `${Math.floor(
+    statsInfo.stats.worstVideoRecvPacketLoss * 100
+  )}%`;
 }
 
-// Loops through callFrame.participants() to list participants on the call
-function updateParticipantInfoDisplay(e) {
-  showEvent(e);
-  let meetingParticipantsInfo = document.getElementById(
-      'meeting-participants-info'
-    ),
-    participants = callFrame.participants(),
-    participantsList = '';
-  for (var id in participants) {
-    let p = participants[id];
-    participantsList += `
-        <li>${p.user_name || 'Guest'}</li>
-    `;
-  }
-  meetingParticipantsInfo.innerHTML = participantsList;
+function showRoomInput() {
+  const urlInput = document.getElementById('url-input');
+  const urlClick = document.getElementById('url-click');
+  const urlForm = document.getElementById('url-form');
+  urlClick.classList.remove('show');
+  urlClick.classList.add('hide');
+
+  urlForm.classList.remove('hide');
+  urlForm.classList.add('show');
+  urlInput.focus();
 }
 
-// Displays a countdown timer for the demo room if a demo room has been created
-function displayDemoRoomTimer() {
+function showDemoCountdown() {
+  const countdownDisplay = document.getElementById('demo-countdown');
+
   if (!window.expiresUpdate) {
     window.expiresUpdate = setInterval(() => {
       let exp = room && room.config && room.config.exp;
       if (exp) {
-        document.getElementsByClassName('expires-countdown')[0].innerHTML = `
-           <em>⏳ Heads up! Your demo room expires in
-             ${Math.floor((new Date(exp * 1000) - Date.now()) / 1000)}
-           seconds ⏳</em>
-         `;
+        let seconds = Math.floor((new Date(exp * 1000) - Date.now()) / 1000);
+        let minutes = Math.floor(seconds / 60);
+        let remainingSeconds = Math.floor(seconds % 60);
+
+        countdownDisplay.innerHTML = `Demo expires in ${minutes}:${
+          remainingSeconds > 10 ? remainingSeconds : '0' + remainingSeconds
+        }`;
       }
     }, 1000);
   }
