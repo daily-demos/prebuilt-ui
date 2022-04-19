@@ -2,7 +2,7 @@
 
 This demo highlights [Daily's prebuilt UI](https://www.daily.co/blog/prebuilt-ui/), and how it can be used to embed a video chat widget in a website or app. The demo also illustrates how to use [daily-js methods](https://docs.daily.co/reference#instance-methods) and [events](https://docs.daily.co/reference#events) to build custom interfaces outside of the callframe that control the call.
 
-Check out a live version of the demo [here](https://prebuilt-ui.netlify.app/). 
+Check out a live version of the demo [here](https://prebuilt-ui.netlify.app/).
 
 The demo's custom controls use these Daily methods:
 
@@ -17,7 +17,8 @@ The demo's custom controls use these Daily methods:
 - [`.getNetworkStats()`](https://docs.daily.co/reference#%EF%B8%8F-getnetworkstats)
 - [`.setSubscribeToTracksAutomatically()`](https://docs.daily.co/reference#%EF%B8%8F-setsubscribetotracksautomatically)
 
-![Video call takes up the left side of the screen, call controls on the right](./assets/prebuilt-ui-demo.gif)
+![homescreen](./assets/homescreen.png)
+![call ui](./assets/call_ui.png)
 
 ## Prerequisites
 
@@ -38,20 +39,19 @@ Once a room has been created, the participant can click "Join call." This button
 
 OR...
 
-## Running using Netlify CLI 
+## Running using Netlify CLI
 
-If you want access to the Daily REST API (using the proxy as specified in `netlify.toml`) as well as a more robust local dev environment, please do the following (in this project's directory): 
+If you want access to the Daily REST API (using the proxy as specified in `netlify.toml`) as well as a more robust local dev environment, please do the following (in this project's directory):
 
 1. Deploy to your Netlify account
-[![Deploy with Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/daily-demos/prebuilt-ui)
+   [![Deploy with Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/daily-demos/prebuilt-ui)
 
 2. Install the Netlify CLI `npm i -g netlify-cli`
 3. Login to your account `netlify login`
 4. Rename `sample.env` to `.env` and add your API key
-4. Start the dev server `netlify dev`
+5. Start the dev server `netlify dev`
 
-> Note: If the API proxy isn't working locally you may need to run `netlify build` first. This will put API key in the `netlify.toml` file, so make sure you don't commit this change. 
-
+> Note: If the API proxy isn't working locally you may need to run `netlify build` first. This will put API key in the `netlify.toml` file, so make sure you don't commit this change.
 
 ## Contributing and feedback
 
