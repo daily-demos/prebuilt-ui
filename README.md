@@ -18,7 +18,7 @@ The demo's custom controls use these Daily methods:
 - [`.setSubscribeToTracksAutomatically()`](https://docs.daily.co/reference#%EF%B8%8F-setsubscribetotracksautomatically)
 
 ![homescreen](./assets/homescreen.png)
-![call ui](./assets/callui.png)
+![call ui](./assets/call_ui.png)
 
 ## Prerequisites
 
