@@ -211,6 +211,43 @@
               </button>
             </div>
           </div>
+          <div class="controls-custom-example">
+            <h3>Live streaming controls</h3>
+            <p>
+              You can also create your own meeting controls outside of the
+              callframe using daily-js.
+            </p>
+            <div class="custom-buttons">
+              <button
+                class="button controls-button white-button"
+                id="start-livestreaming"
+                onclick="startLiveStreaming()"
+              >
+                Start live streaming
+              </button>
+              <button
+                class="button controls-button white-button"
+                id="start-livestreaming"
+                onclick="updateLiveStreaming()"
+              >
+                Apply custom VCS settings
+              </button>
+              <button
+                class="button controls-button white-button"
+                id="stop-livestreaming"
+                onclick="stopLiveStreaming()"
+              >
+                Stop live streaming
+              </button>
+            </div>
+            <form onsubmit="showToast(event)">
+              <label for="toast">Toast text</label>
+              <input class="toast-input" type="text" id="toast" />
+              <div>
+                <input class="white-button" type="submit" value="Send toast" />
+              </div>
+            </form>
+          </div>
         </div>
       </div>
     </div>

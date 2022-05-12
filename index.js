@@ -113,6 +113,8 @@ async function joinCall() {
     await callFrame.join({
       url: url,
       showLeaveButton: true,
+      //TODO: add an owner token to use live streaming
+      // token: <token>,
     });
   } catch (e) {
     if (
@@ -224,6 +226,86 @@ function toggleScreenshare() {
 
 function toggleFullscreen() {
   callFrame.requestFullscreen();
+}
+
+// To use live streaming, the room URL should use the format:
+// https://your-daily-domain.daily.co/room-name?t=your-owner-meeting-token
+function startLiveStreaming() {
+  // This should be in the format rtmp://RTMP_ENDPOINT/STREAM_KEY
+  // or rtmps://RTMP_ENDPOINT/STREAM_KEY
+  console.log('starting!!!');
+  const rtmpUrl = 'rtmp://RTMP_ENDPOINT/STREAM_KEY';
+  callFrame.startLiveStreaming({
+    rtmpUrl,
+    layout: {
+      preset: 'custom',
+      composition_params: {
+        'videoSettings.showParticipantLabels': true,
+      },
+      /* optional: sessions assets must be included in startLiveStreaming() even if they aren't used until an updateLiveStreaming() call
+      session asset images *must* be a .png
+       */
+      session_assets: {
+        'images/dailyLogo': 'https://docs.daily.co/assets/generic-meta.png',
+      },
+    },
+  });
+}
+
+function updateLiveStreaming() {
+  console.log('updating!!!');
+  callFrame.updateLiveStreaming({
+    layout: {
+      preset: 'custom',
+      composition_params: {
+        mode: 'pip',
+        showImageOverlay: true,
+        'image.assetName': 'dailyLogo',
+        'image.aspectRatio': 1,
+        'image.position': 'bottom-left',
+        'image.opacity': 0.7,
+        'image.height_vh': 0.2,
+        'image.margin_vh': 0.01,
+        showTextOverlay: true,
+        'text.align_horizontal': 'right',
+        'text.align_vertical': 'bottom',
+        'text.offset_x': -20,
+        'text.fontFamily': 'PermanentMarker',
+        'text.content': 'Hello from Daily!',
+      },
+    },
+  });
+}
+
+function stopLiveStreaming() {
+  console.log('stopping!!!');
+  callFrame.stopLiveStreaming();
+}
+
+let toastKey = 0;
+
+function showToast(e) {
+  // prevent default form behavior
+  e.preventDefault();
+  // get input value from form submit event
+  const toastText = e.target[0].value;
+
+  // send
+  callFrame.updateLiveStreaming({
+    layout: {
+      preset: 'custom',
+      composition_params: {
+        'toast.text': toastText,
+        'toast.color': 'rgba(215, 50, 110, 0.8)',
+        'toast.text.fontFamily': 'Bitter',
+        'toast.duration_secs': 3,
+        'toast.text.fontSize_pct': 150,
+        'toast.text.fontWeight': '400',
+        'toast.key': toastKey,
+      },
+    },
+  });
+  toastKey++;
 }
 
 function toggleLocalVideo() {
