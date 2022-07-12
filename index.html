@@ -47,22 +47,23 @@
           <p class="prompt">
             Start demo with a new unique room or paste in your own room URL.
           </p>
-          <button
+          <!-- <button
             id="create-and-start"
-            class="button start-button"
+            class="button"
             onclick="createRoomAndStart()"
+            disabled
           >
             Create room and start
-          </button>
-          <p class="url-prompt">or</p>
-          <p
+          </button> -->
+          <!-- <p class="url-prompt">or</p> -->
+          <!-- <p
             id="url-click"
             class="url-prompt url-click show"
             onclick="showRoomInput()"
           >
             Enter my room URL
-          </p>
-          <div id="url-form" class="url-form hide">
+          </p> -->
+          <div id="url-form" class="url-form">
             <label for="url-input"></label>
             <input
               type="text"
@@ -75,7 +76,6 @@
               id="join-call"
               onclick="joinCall()"
               class="button start-button disabled-button"
-              disabled
             >
               Join room
             </button>

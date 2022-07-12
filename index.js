@@ -17,6 +17,8 @@ async function createCallframe() {
     .on('camera-error', showEvent)
     .on('joining-meeting', toggleLobby)
     .on('joined-meeting', handleJoinedMeeting)
+    // ADDED TO SHOW PROFILE PIC WHEN VIDEO TURNED OFF
+    .on('participant-updated', handleParticipantUpdated)
     .on('left-meeting', handleLeftMeeting);
 
   const roomURL = document.getElementById('url-input');
@@ -56,21 +58,21 @@ async function createRoom() {
     },
   };
 
-  try {
-    let response = await fetch(newRoomEndpoint, {
-        method: 'POST',
-        body: JSON.stringify(options),
-        mode: 'cors',
-      }),
-      room = await response.json();
-    return room;
-  } catch (e) {
-    console.error(e);
-  }
+  // try {
+  //   let response = await fetch(newRoomEndpoint, {
+  //       method: 'POST',
+  //       body: JSON.stringify(options),
+  //       mode: 'cors',
+  //     }),
+  //     room = await response.json();
+  //   return room;
+  // } catch (e) {
+  //   console.error(e);
+  // }
 
   // Comment out the above and uncomment the below, using your own URL
   // if you prefer to test with a hardcoded room
-  //  return {url: "https://your-domain.daily.co/hello"}
+  return { url: 'your-daily-url' };
 }
 
 async function createRoomAndStart() {
@@ -97,6 +99,7 @@ async function createRoomAndStart() {
     callFrame.join({
       url: room.url,
       showLeaveButton: true,
+      token: 'your-token',
     });
   } catch (e) {
     toggleError();
@@ -114,7 +117,7 @@ async function joinCall() {
       url: url,
       showLeaveButton: true,
       //TODO: add an owner token to use live streaming
-      // token: <token>,
+      token: 'your-token',
     });
   } catch (e) {
     if (
@@ -131,6 +134,27 @@ async function joinCall() {
 /* Event listener callbacks and helpers */
 function showEvent(e) {
   console.log('callFrame event', e);
+}
+
+let localVideoOn = true;
+function handleParticipantUpdated(e) {
+  let showProfilePic = true;
+  const isLocalParticipant = e.participant.local;
+
+  // only worry about the local participant (assuming this is the host of the live stream)
+  if (isLocalParticipant) {
+    // no video change, return
+    if (localVideoOn === e.participant.video) return;
+
+    if (localVideoOn && !e.participant.video) {
+      // the video has been turned off so we can show the profile picture
+      updateLiveStreaming(showProfilePic);
+    } else {
+      // if the video is back on, hide the profile pic
+      showProfilePic = false;
+      updateLiveStreaming(showProfilePic);
+    }
+  }
 }
 
 function toggleHomeScreen() {
@@ -233,45 +257,36 @@ function toggleFullscreen() {
 function startLiveStreaming() {
   // This should be in the format rtmp://RTMP_ENDPOINT/STREAM_KEY
   // or rtmps://RTMP_ENDPOINT/STREAM_KEY
-  console.log('starting!!!');
+
+  // TODO - add your own
   const rtmpUrl = 'rtmp://RTMP_ENDPOINT/STREAM_KEY';
   callFrame.startLiveStreaming({
     rtmpUrl,
     layout: {
       preset: 'custom',
       composition_params: {
-        'videoSettings.showParticipantLabels': true,
+        showImageOverlay: false,
+        'image.assetName': 'profilePic',
+        'image.fullScreen': true,
       },
       /* optional: sessions assets must be included in startLiveStreaming() even if they aren't used until an updateLiveStreaming() call
       session asset images *must* be a .png
        */
       session_assets: {
-        'images/dailyLogo': 'https://docs.daily.co/assets/generic-meta.png',
+        'images/profilePic':
+          'https://www.daily.co/blog/content/images/2022/07/Directory-Image--36-.png',
       },
     },
   });
 }
 
-function updateLiveStreaming() {
+function updateLiveStreaming(showProfilePic) {
   console.log('updating!!!');
   callFrame.updateLiveStreaming({
     layout: {
       preset: 'custom',
       composition_params: {
-        mode: 'pip',
-        showImageOverlay: true,
-        'image.assetName': 'dailyLogo',
-        'image.aspectRatio': 1,
-        'image.position': 'bottom-left',
-        'image.opacity': 0.7,
-        'image.height_vh': 0.2,
-        'image.margin_vh': 0.01,
-        showTextOverlay: true,
-        'text.align_horizontal': 'right',
-        'text.align_vertical': 'bottom',
-        'text.offset_x': -20,
-        'text.fontFamily': 'PermanentMarker',
-        'text.content': 'Hello from Daily!',
+        showImageOverlay: showProfilePic,
       },
     },
   });
