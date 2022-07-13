@@ -149,10 +149,12 @@ function handleParticipantUpdated(e) {
     if (localVideoOn && !e.participant.video) {
       // the video has been turned off so we can show the profile picture
       updateLiveStreaming(showProfilePic);
+      localVideoOn = false;
     } else {
       // if the video is back on, hide the profile pic
       showProfilePic = false;
       updateLiveStreaming(showProfilePic);
+      localVideoOn = true;
     }
   }
 }
