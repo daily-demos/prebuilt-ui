@@ -9,7 +9,7 @@ let callFrame, room;
 
 async function createCallframe() {
   const callWrapper = document.getElementById('wrapper');
-  callFrame = await window.DailyIframe.createFrame(callWrapper);
+  callFrame = window.DailyIframe.createFrame(callWrapper);
 
   callFrame
     .on('loaded', showEvent)
