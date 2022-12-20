@@ -15,7 +15,6 @@ The demo's custom controls use these Daily methods:
 - [`.requestFullscreen()`](https://docs.daily.co/reference#requestfullscreen)
 - [`.participants()`](https://docs.daily.co/reference#%EF%B8%8F-participants)
 - [`.getNetworkStats()`](https://docs.daily.co/reference#%EF%B8%8F-getnetworkstats)
-- [`.setSubscribeToTracksAutomatically()`](https://docs.daily.co/reference#%EF%B8%8F-setsubscribetotracksautomatically)
 
 ![homescreen](./assets/homescreen.png)
 ![call ui](./assets/call_ui.png)
