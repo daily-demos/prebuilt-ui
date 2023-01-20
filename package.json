@@ -23,7 +23,7 @@
   },
   "homepage": "https://github.com/daily-demos/prebuilt-ui#readme",
   "devDependencies": {
-    "http-server": "^0.12.3",
-    "prettier": "^2.2.1"
+    "http-server": "^14.1.1",
+    "prettier": "^2.8.3"
   }
 }
