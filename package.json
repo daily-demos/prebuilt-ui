@@ -5,7 +5,8 @@
   "scripts": {
     "prettify": "prettier --write \"./**/*.{js,css,html,md}\"",
     "dev": "http-server",
-    "netlify-build": "sed -i s/DAILY_API_KEY_PLACEHOLDER/${DAILY_API_KEY}/g netlify.toml"
+    "netlify-build": "sed -i s/DAILY_API_KEY_PLACEHOLDER/${DAILY_API_KEY}/g netlify.toml",
+    "update": "npm outdated | awk 'NR>1 {print $1\"@\"$4}' | xargs npm install"
   },
   "repository": {
     "type": "git",
@@ -24,6 +25,6 @@
   "homepage": "https://github.com/daily-demos/prebuilt-ui#readme",
   "devDependencies": {
     "http-server": "^14.1.1",
-    "prettier": "^2.8.3"
+    "prettier": "^3.0.2"
   }
 }

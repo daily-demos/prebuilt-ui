@@ -4,7 +4,6 @@ about: Create a report to help us improve
 title: BUG
 labels: bug
 assignees: kimberleejohnson
-
 ---
 
 <!-- If you're experiencing a bug while on a Daily call, before filing a bug report, please try these troubleshooting steps: https://help.daily.co/en/articles/2303117-top-troubleshooting-tips -->
