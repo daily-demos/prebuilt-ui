@@ -5,7 +5,7 @@
  */
 
 /* Main functions */
-let callFrame, room;
+let callFrame, room, networkUpdateID;
 
 async function createCallframe() {
   const callWrapper = document.getElementById('wrapper');
@@ -70,7 +70,7 @@ async function createRoom() {
 
   // Comment out the above and uncomment the below, using your own URL
   // if you prefer to test with a hardcoded room
-  //  return {url: "https://your-domain.daily.co/hello"}
+  // return { url: 'https://lizashul.daily.co/hello' };
 }
 
 async function createRoomAndStart() {
@@ -170,10 +170,15 @@ function toggleMainInterface() {
 function handleJoinedMeeting() {
   toggleLobby();
   toggleMainInterface();
+  startNetworkInfoPing();
 }
 
 function handleLeftMeeting() {
   toggleMainInterface();
+  if (networkUpdateID) {
+    clearInterval(networkUpdateID);
+    networkUpdateID = null;
+  }
 }
 
 function resetErrorDesc() {
@@ -247,6 +252,15 @@ function toggleParticipantsBar() {
 }
 
 /* Other helper functions */
+
+// Starts an interval to check local network info
+// evry 3 seconds.
+function startNetworkInfoPing() {
+  networkUpdateID = setInterval(() => {
+    updateNetworkInfoDisplay();
+  }, 3000);
+}
+
 // Populates 'network info' with information info from daily-js
 async function updateNetworkInfoDisplay() {
   const videoSend = document.getElementById('video-send'),
@@ -256,20 +270,20 @@ async function updateNetworkInfoDisplay() {
 
   let statsInfo = await callFrame.getNetworkStats();
 
+  const stats = statsInfo.stats;
+  const latest = stats.latest;
   videoSend.innerHTML = `${Math.floor(
-    statsInfo.stats.latest.videoSendBitsPerSecond / 1000
+    latest.videoSendBitsPerSecond / 1000
   )} kb/s`;
 
   videoReceive.innerHTML = `${Math.floor(
-    statsInfo.stats.latest.videoRecvBitsPerSecond / 1000
+    latest.videoRecvBitsPerSecond / 1000
   )} kb/s`;
 
-  packetSend.innerHTML = `${Math.floor(
-    statsInfo.stats.worstVideoSendPacketLoss * 100
-  )}%`;
+  packetSend.innerHTML = `${Math.floor(stats.worstVideoSendPacketLoss * 100)}%`;
 
   packetReceive.innerHTML = `${Math.floor(
-    statsInfo.stats.worstVideoRecvPacketLoss * 100
+    stats.worstVideoRecvPacketLoss * 100
   )}%`;
 }
 
