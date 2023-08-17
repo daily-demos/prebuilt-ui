@@ -70,7 +70,7 @@ async function createRoom() {
 
   // Comment out the above and uncomment the below, using your own URL
   // if you prefer to test with a hardcoded room
-  // return { url: 'https://lizashul.daily.co/hello' };
+  return { url: 'https://your-domain.daily.co/hello' };
 }
 
 async function createRoomAndStart() {
@@ -242,7 +242,7 @@ function toggleLocalVideo() {
 
 function toggleParticipantsBar() {
   const participantsBarButton = document.getElementById(
-    'participants-bar-button'
+    'participants-bar-button',
   );
   const currentlyShown = callFrame.showParticipantsBar();
   callFrame.setShowParticipantsBar(!currentlyShown);
@@ -254,36 +254,37 @@ function toggleParticipantsBar() {
 /* Other helper functions */
 
 // Starts an interval to check local network info
-// evry 3 seconds.
+// every 2 seconds.
 function startNetworkInfoPing() {
   networkUpdateID = setInterval(() => {
     updateNetworkInfoDisplay();
-  }, 3000);
+  }, 2000);
 }
 
 // Populates 'network info' with information info from daily-js
 async function updateNetworkInfoDisplay() {
   const videoSend = document.getElementById('video-send'),
     videoReceive = document.getElementById('video-receive'),
-    packetSend = document.getElementById('packet-send'),
-    packetReceive = document.getElementById('packet-receive');
+    videoPacketSend = document.getElementById('video-packet-send'),
+    videoPacketReceive = document.getElementById('video-packet-receive');
 
-  let statsInfo = await callFrame.getNetworkStats();
-
+  const statsInfo = await callFrame.getNetworkStats();
   const stats = statsInfo.stats;
   const latest = stats.latest;
   videoSend.innerHTML = `${Math.floor(
-    latest.videoSendBitsPerSecond / 1000
+    latest.videoSendBitsPerSecond / 1000,
   )} kb/s`;
 
   videoReceive.innerHTML = `${Math.floor(
-    latest.videoRecvBitsPerSecond / 1000
+    latest.videoRecvBitsPerSecond / 1000,
   )} kb/s`;
 
-  packetSend.innerHTML = `${Math.floor(stats.worstVideoSendPacketLoss * 100)}%`;
+  videoPacketSend.innerHTML = `${Math.floor(
+    stats.worstVideoSendPacketLoss * 100,
+  )}%`;
 
-  packetReceive.innerHTML = `${Math.floor(
-    stats.worstVideoRecvPacketLoss * 100
+  videoPacketReceive.innerHTML = `${Math.floor(
+    stats.worstVideoRecvPacketLoss * 100,
   )}%`;
 }
 
