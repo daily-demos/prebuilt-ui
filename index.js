@@ -42,8 +42,8 @@ async function createCallframe() {
 }
 
 async function createRoom() {
-  // This endpoint is using the proxy as outlined in netlify.toml
-  const newRoomEndpoint = `${window.location.origin}/api/rooms`;
+  // // This endpoint is using the proxy as outlined in netlify.toml
+  // const newRoomEndpoint = `${window.location.origin}/api/rooms`;
 
   // we'll add 30 min expiry (exp) so rooms won't linger too long on your account
   // we'll also turn on chat (enable_chat)
@@ -56,21 +56,21 @@ async function createRoom() {
     },
   };
 
-  try {
-    let response = await fetch(newRoomEndpoint, {
-        method: 'POST',
-        body: JSON.stringify(options),
-        mode: 'cors',
-      }),
-      room = await response.json();
-    return room;
-  } catch (e) {
-    console.error(e);
-  }
+  // try {
+  //   let response = await fetch(newRoomEndpoint, {
+  //       method: 'POST',
+  //       body: JSON.stringify(options),
+  //       mode: 'cors',
+  //     }),
+  //     room = await response.json();
+  //   return room;
+  // } catch (e) {
+  //   console.error(e);
+  // }
 
   // Comment out the above and uncomment the below, using your own URL
   // if you prefer to test with a hardcoded room
-  return { url: 'https://your-domain.daily.co/hello' };
+  return { url: 'https://consultadeleke.daily.co/Mayorkun27' };
 }
 
 async function createRoomAndStart() {
