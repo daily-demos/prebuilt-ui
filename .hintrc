@@ -1,0 +1,16 @@
+{
+  "extends": [
+    "development"
+  ],
+  "hints": {
+    "button-type": "off",
+    "axe/structure": [
+      "default",
+      {
+        "definition-list": "off",
+        "dlitem": "off"
+      }
+    ],
+    "disown-opener": "off"
+  }
+}

@@ -10,82 +10,21 @@
     <script src="./index.js"></script>
   </head>
   <body onload="createCallframe()">
-     <header class="header">
-          <div class="left-header">
-          <img
-          src="assets/daily_logo.svg"
-          class="daily-logo"
-          alt="Daily logo reads Daily"
-          />
-          <strong>
-          <p class="header-title">Daily Prebuilt demo</p>
-          </strong>
-          </div>
-          <div class="right-header">
-          <a href="https://docs.daily.co/reference" target="_blank" class="link">
-          <button class="button docs-button white-button">
-               API docs
-               <img
-               class="arrow-icon"
-               src="/assets/new_tab_icon.png"
-               alt="Arrow icon points up and to the right"
-               />
-          </button>
-          </a>
-          <span class="divider"></span>
-          <a href="https://github.com/daily-demos/prebuilt-ui" target="_blank">
-          <img
-               class="octocat"
-               src="assets/github_logo.png"
-               alt="GitHub logo Octocat"
-          />
-          </a>
-          </div>
-     </header>
+
+     
      <div class="container">
           <div id="wrapper" class="wrapper">
                <!-- Start Call -->
                <div id="start-container" class="start-container">
-               <h1 class="title">Daily Prebuilt demo</h1>
-               <p class="prompt">
-                    Start demo with a new unique room or paste in your own room URL.
-               </p>
-               <button
-                    id="create-and-start"
-                    class="button start-button"
-                    onclick="createRoomAndStart()"
-               >
-                    Create room and start
-               </button>
-               <p class="url-prompt">or</p>
-               <p
-                    id="url-click"
-                    class="url-prompt url-click show"
-                    onclick="showRoomInput()"
-               >
-                    Enter my room URL
-               </p>
-               <div id="url-form" class="url-form hide">
-                    <label for="url-input"></label>
-                    <input
-                    type="text"
-                    class="url-input"
-                    id="url-input"
-                    placeholder="Enter room URL..."
-                    pattern="^(https:\/\/)?[\w.-]+(\.(daily\.(co)))+[\/\/]+[\w.-]+$"
-                    />
-                    <button
-                    id="join-call"
-                    onclick="joinCall()"
-                    class="button start-button disabled-button"
-                    disabled
-                    >
-                    Join room
-                    </button>
+                         <p id="url-click" class="url-prompt url-click show" onclick="showRoomInput()">Enter my room URL</p>
+                    <div id="url-form" class="url-form hide">
+                         <label for="url-input"></label>
+                         <input type="text" class="url-input" id="url-input" placeholder="Enter room URL..." pattern="^(https:\/\/)?[\w.-]+(\.(daily\.(co)))+[\/\/]+[\w.-]+$" />
+                         <button id="join-call" onclick="joinCall()" class="button start-button disabled-button" disabled >Join room</button>
+                    </div>
                </div>
-               </div>
-               <!-- Error Message -->
-               <div id="error-message" class="hide">
+                <!-- Error Message -->
+                <div id="error-message" class="hide">
                     <h2 id="error-title" class="title error-title">Incorrect room URL</h2>
                     <p id="error-description" class="error-description">
                          Meeting link entered is invalid. Please update the room URL.
@@ -174,5 +113,6 @@
                </div>
           </div>
      </div>
-  </body>
+
+</body>
 </html>
