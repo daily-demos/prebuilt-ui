@@ -1,112 +1,112 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <title>Daily Prebuilt demo</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <script src="https://unpkg.com/@daily-co/daily-js"></script>
-    <link rel="icon" type="image/png" href="./assets/favicon.png">
-    <link rel="stylesheet" href="./index.css">
-    <script src="./index.js"></script>
-  </head>
-  <body onload="createCallframe()">
-     <div class="container">
-          <div id="wrapper" class="wrapper">
-               <!-- Start Call -->
-               <div id="start-container" class="start-container">
-                    <h1 class="title">Daily Prebuilt demo</h1>
-                    <p class="prompt">Start demo with a new unique room or paste in your own room URL.</p>
-                    <button id="create-and-start" class="button start-button" onclick="createRoomAndStart()">Create room and start</button>
+     <head>
+          <meta charset="utf-8">
+          <title>Daily Prebuilt demo</title>
+          <meta name="viewport" content="width=device-width, initial-scale=1">
+          <script src="https://unpkg.com/@daily-co/daily-js"></script>
+          <link rel="icon" type="image/png" href="./assets/favicon.png">
+          <link rel="stylesheet" href="./index.css">
+          <script src="./index.js"></script>
+     </head>
+     <body onload="createCallframe()">
+          <div class="container">
+               <div id="wrapper" class="wrapper">
+                    <!-- Start Call -->
+                    <div id="start-container" class="start-container">
+                         <h1 class="title">Daily Prebuilt demo</h1>
+                         <p class="prompt">Start demo with a new unique room or paste in your own room URL.</p>
+                         <button id="create-and-start" class="button start-button" onclick="createRoomAndStart()">Create room and start</button>
+                    </div>
+                    <!-- Error Message -->
+                    <div id="error-message" class="hide">
+                         <h2 id="error-title" class="title error-title">Incorrect room URL</h2>
+                         <p id="error-description" class="error-description">
+                              Meeting link entered is invalid. Please update the room URL.
+                         </p>
+                         <button class="button white-button" onClick="tryAgain()">
+                              Try Again
+                         </button>
+                    </div>
                </div>
-               <!-- Error Message -->
-               <div id="error-message" class="hide">
-                    <h2 id="error-title" class="title error-title">Incorrect room URL</h2>
-                    <p id="error-description" class="error-description">
-                         Meeting link entered is invalid. Please update the room URL.
-                    </p>
-                    <button class="button white-button" onClick="tryAgain()">
-                         Try Again
-                    </button>
-               </div>
-          </div>
 
-          <div id="call-controls-wrapper" class="call-controls-wrapper hide">
-               <div class="call-controls">
-                    <div class="controls-header">
-                         <h3>Call overview</h3>
-                         <p id="demo-countdown" class="demo-countdown"></p>
-                    </div>
-                    <div class="controls-copy-url">
-                         <div class="copy-url-instructions">
-                              <h3>Invite participants</h3>
-                              <p>Share URL below to invite others</p>
+               <div id="call-controls-wrapper" class="call-controls-wrapper hide">
+                    <div class="call-controls">
+                         <div class="controls-header">
+                              <h3>Call overview</h3>
+                              <p id="demo-countdown" class="demo-countdown"></p>
                          </div>
-                         <div class="copy-url-action">
-                              <label for="copy-url"></label>
-                              <input type="text" class="url-input" id="copy-url" placeholder="Copy this room URL" pattern="^(https:\/\/)?[\w.-]+(\.(daily\.(co)))+[\/\/]+[\w.-]+$"/>
-                              <button id="copy-url-button" class="button copy-url-button" onclick="copyUrl()">Copy URL</button>
-                         </div>
-                    </div>
-                    <div class="controls-stats">
-                         <dl>
-                              <h3>Network stats</h3>
-                              <div class="stats-wrapper">
-                                   <div class="stats-column">
-                                        <div class="stats-row">
-                                             <dt>Video sending</dt>
-                                             <dd id="video-send"></dd>
-                                        </div>
-                                        <div class="stats-row">
-                                             <dt>Video receiving</dt>
-                                             <dd id="video-receive"></dd>
-                                        </div>
-                                   </div>
-                                   <div class="stats-column">
-                                        <div class="stats-row">
-                                             <dt>Packet loss send</dt>
-                                             <dd id="video-packet-send"></dd>
-                                        </div>
-                                        <div class="stats-row">
-                                             <dt>Packet loss receiving</dt>
-                                             <dd id="video-packet-receive"></dd>
-                                        </div>
-                                   </div>
+                         <div class="controls-copy-url">
+                              <div class="copy-url-instructions">
+                                   <h3>Invite participants</h3>
+                                   <p>Share URL below to invite others</p>
                               </div>
-                         </dl>
-                    </div>
-                    <div class="controls-custom-example">
-                         <h3>Example custom controls</h3>
-                         <p>You can also create your own meeting controls outside of the callframe using daily-js.</p>
-                         <div class="custom-buttons">
-                         <button onclick="toggleCamera()" class="button controls-button white-button"> Toggle camera <img src="/assets/camera_icon.png" class="control-icon" alt="Drawing of a camera" /></button>
-                         <button onclick="toggleMic()" class="button controls-button white-button"> Toggle mic <img src="/assets/mic_icon.png" class="control-icon" alt="Drawing of a microphone" /></button>
-                         <button onclick="toggleScreenshare()" class="button controls-button white-button"> Share screen <img src="/assets/screenshare_icon.png" class="control-icon" alt="Drawing of computer screen" /></button>
-                         <button
-                              onclick="toggleFullscreen()"
-                              class="button controls-button white-button"
-                         >
-                              Expand fullscreen
-                         </button>
-                         <button
-                              onclick="toggleLocalVideo()"
-                              class="button controls-button white-button"
-                              id="local-video-button"
-                              title="Hides the local participant's camera stream"
-                         >
-                              Hide local video
-                         </button>
-                         <button
-                              id="participants-bar-button"
-                              onclick="toggleParticipantsBar()"
-                              class="button controls-button white-button"
-                              title="Toggles the other participants' videos in Speaker View when three or more people are on the call"
-                         >
-                              Toggle other participants (in Speaker View)
-                         </button>
+                              <div class="copy-url-action">
+                                   <label for="copy-url"></label>
+                                   <input type="text" class="url-input" id="copy-url" placeholder="Copy this room URL" pattern="^(https:\/\/)?[\w.-]+(\.(daily\.(co)))+[\/\/]+[\w.-]+$"/>
+                                   <button id="copy-url-button" class="button copy-url-button" onclick="copyUrl()">Copy URL</button>
+                              </div>
+                         </div>
+                         <div class="controls-stats">
+                              <dl>
+                                   <h3>Network stats</h3>
+                                   <div class="stats-wrapper">
+                                        <div class="stats-column">
+                                             <div class="stats-row">
+                                                  <dt>Video sending</dt>
+                                                  <dd id="video-send"></dd>
+                                             </div>
+                                             <div class="stats-row">
+                                                  <dt>Video receiving</dt>
+                                                  <dd id="video-receive"></dd>
+                                             </div>
+                                        </div>
+                                        <div class="stats-column">
+                                             <div class="stats-row">
+                                                  <dt>Packet loss send</dt>
+                                                  <dd id="video-packet-send"></dd>
+                                             </div>
+                                             <div class="stats-row">
+                                                  <dt>Packet loss receiving</dt>
+                                                  <dd id="video-packet-receive"></dd>
+                                             </div>
+                                        </div>
+                                   </div>
+                              </dl>
+                         </div>
+                         <div class="controls-custom-example">
+                              <h3>Example custom controls</h3>
+                              <p>You can also create your own meeting controls outside of the callframe using daily-js.</p>
+                              <div class="custom-buttons">
+                              <button onclick="toggleCamera()" class="button controls-button white-button"> Toggle camera <img src="/assets/camera_icon.png" class="control-icon" alt="Drawing of a camera" /></button>
+                              <button onclick="toggleMic()" class="button controls-button white-button"> Toggle mic <img src="/assets/mic_icon.png" class="control-icon" alt="Drawing of a microphone" /></button>
+                              <button onclick="toggleScreenshare()" class="button controls-button white-button"> Share screen <img src="/assets/screenshare_icon.png" class="control-icon" alt="Drawing of computer screen" /></button>
+                              <button
+                                   onclick="toggleFullscreen()"
+                                   class="button controls-button white-button"
+                              >
+                                   Expand fullscreen
+                              </button>
+                              <button
+                                   onclick="toggleLocalVideo()"
+                                   class="button controls-button white-button"
+                                   id="local-video-button"
+                                   title="Hides the local participant's camera stream"
+                              >
+                                   Hide local video
+                              </button>
+                              <button
+                                   id="participants-bar-button"
+                                   onclick="toggleParticipantsBar()"
+                                   class="button controls-button white-button"
+                                   title="Toggles the other participants' videos in Speaker View when three or more people are on the call"
+                              >
+                                   Toggle other participants (in Speaker View)
+                              </button>
+                              </div>
                          </div>
                     </div>
                </div>
           </div>
-     </div>
-</body>
+     </body>
 </html>
