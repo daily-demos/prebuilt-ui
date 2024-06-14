@@ -1,6 +1,6 @@
 :root {
   --grey-lightest: #f7f9fa;
-  --grey: #c8d1dc;
+  --grey: #dde2e9;
   --dark-grey: #6b7785;
   --dark-blue: #1f2d3d;
   --dark-blue-border: #2b3f56;
@@ -103,17 +103,31 @@ nav{
 }
 .hero{
      height: 85vh;
-     background-image: url(woman-taking-notes-from-her-friend-s-doctor.jpg);
+     background-image: linear-gradient(to right,#6b7785de, #e3e3e3a7), url(woman-taking-notes-from-her-friend-s-doctor.jpg);
      background-size: cover;
      background-position: center;
      background-repeat: no-repeat;
-     .col-7{
-          margin-top: 20%;
+     .col-5{
+          margin-top: 10%;
           margin-left: 30px;
+          display: flex;
+          flex-direction: column;
+          gap: 20px;
+          align-items: center;
      }
      .headesr{
           font-size: 60px;
           color: var(--grey);
+          text-shadow: 2px 2px 5px #1f2d3d;
+          line-height: 90%;
+     }
+     .paragph{
+          font-size: 20px;
+          color: var(--grey-lightest);
+          line-height: 150%;
+     }
+     .class {
+          width: 100%;
      }
      .btn {
           position: relative;
