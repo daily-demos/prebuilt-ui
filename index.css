@@ -111,6 +111,10 @@ nav{
           margin-top: 20%;
           margin-left: 30px;
      }
+     .headesr{
+          font-size: 60px;
+          color: var(--grey);
+     }
      .btn {
           position: relative;
           display: flex;
@@ -134,7 +138,6 @@ nav{
           content: '';
           z-index: -1;
           background-color: var(--dark-blue-border);
-          border: 2px solid black;
           border-radius: 2rem;
           width: 110%;
           height: 100%;
