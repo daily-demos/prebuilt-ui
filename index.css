@@ -101,7 +101,7 @@ nav{
           transform: translate(2px ,2px);
      }
 }
-.hero{
+#hero{
      height: 85vh;
      background-image: linear-gradient(to right,#6b7785de, #e3e3e3a7), url(woman-taking-notes-from-her-friend-s-doctor.jpg);
      background-size: cover;
@@ -188,4 +188,148 @@ nav{
         .btn:active {
           filter: brightness(1.4);
         }
+}
+#services{
+     height: 80vh;
+     padding-top: 50px;
+     background-color: var(--grey-lightest);
+     .services{
+          font-size: 60px;
+          color: var(--dark-blue);
+          text-shadow: 2px 2px 5px #6b7785;
+          line-height: 90%; 
+     }
+     .pagarrs{
+          margin: 0 auto;
+          margin-top: 20px;
+          font-size: 20px;
+          width: 650px;
+          color: var(--dark-grey);
+          line-height: 150%;
+     }
+     .row{
+          padding: 0 50px;
+          margin-top: 50px;
+          display: flex;
+          justify-content: space-around;
+          gap: 20px;
+          .col{
+               height: 250px;
+               gap: 20px;
+               background-color: var(--dark-grey);
+               border-radius: 20px;
+               padding: 20px;
+               .service{
+               display: flex;
+               flex-direction: column;
+               align-items: center;
+                    .icon{
+                         font-size: 50px;
+                         color: var(--grey-lightest);
+                    }
+                    .title{
+                         font-size: 30px;
+                         font-weight: 700;
+                         color: var(--dark-blue);
+                    }
+                    .description{
+                         font-size: 20px;
+                         color: var(--grey-lightest);
+                         text-align: center;
+                         line-height: 150%;
+                    }
+               }
+          }
+          .col:hover{
+               background-color: var(--dark-blue-border);
+               animation: moveup .5s ease;
+               .service{
+                    .icon{
+                         color: var(--dark-grey);
+                    }
+                    .title{
+                         color: var(--grey-lightest);
+                    }
+                    .description{
+                         color: var(--grey-lightest);
+                    }
+               }
+          }
+     }
+}
+#testimonials{
+     height: 80vh;
+     padding-top: 50px;
+     background-color: var(--grey-lightest);
+     .testimonials{
+          font-size: 60px;
+          color: var(--dark-blue);
+          text-shadow: 2px 2px 5px #6b7785;
+          line-height: 90%; 
+     }
+     .pagarrs{
+          margin: 0 auto;
+          margin-top: 20px;
+          font-size: 20px;
+          width: 650px;
+          color: var(--dark-grey);
+          line-height: 150%;
+     }
+     .testimonial-carousel{
+          margin-top: 50px;
+          display: flex;
+          justify-content: space-around;
+          gap: 20px;
+          .testimonial-item{
+               height: 250px;
+               gap: 20px;
+               background-color: var(--dark-grey);
+               border-radius: 20px;
+               padding: 20px;
+               .testimonial-content{
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    .icon{
+                         font-size: 50px;
+                         color: var(--grey-lightest);
+                    }
+                    .title{
+                         font-size: 30px;
+                         font-weight: 700;
+                         color: var(--dark-blue);
+                    }
+                    .description{
+                         font-size: 20px;
+                         color: var(--grey-lightest);
+                         text-align: center;
+                         line-height: 150%;
+                    }
+               }
+          }
+          .testimonial:hover{
+               background-color: var(--dark-blue-border);
+               animation: moveup .5s ease;
+               .testimonial-content{
+                    .icon{
+                         color: var(--dark-grey);
+                    }
+                    .title{
+                         color: var(--grey-lightest);
+                    }
+                    .description{
+                         color: var(--grey-lightest);
+                    }
+               }
+          }
+     
+     }
+}
+@keyframes moveup {
+     0% {
+          transform: translateY(0);
+     }
+     100% {
+          transform: translateY(-30px);
+     }
 }
