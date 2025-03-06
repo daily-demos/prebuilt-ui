@@ -34,7 +34,7 @@ async function createCallframe() {
   });
 
   roomURL.addEventListener('keyup', (event) => {
-    if (event.keyCode === 13) {
+    if (event.key === 'Enter') {
       event.preventDefault();
       joinButton.click();
     }
